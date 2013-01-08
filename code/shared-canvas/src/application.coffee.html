@@ -1,0 +1,466 @@
+---
+layout: docco
+title: sga/code/shared-canvas/src/application.coffee.html
+---
+<div id="container"><div id="background"></div><div id="jump_to">Jump To &hellip;<div id="jump_wrapper"><div id="jump_page"><a href="../index.html" class="source"><span class="file_name">README</span></a><a href="../src/application.coffee.html" class="source selected"><span class="base_path">src / </span><span class="file_name">application.coffee</span></a><a href="../src/component.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">component.coffee</span></a><a href="../src/controller.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">controller.coffee</span></a><a href="../src/core.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">core.coffee</span></a><a href="../src/data.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">data.coffee</span></a><a href="../src/intro.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">intro.coffee</span></a><a href="../src/outro.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">outro.coffee</span></a><a href="../src/presentation.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">presentation.coffee</span></a></div></div></div><table cellpadding="0" cellspacing="0"><thead><tr><th class="docs"><h1>application.coffee</h1><div class="filepath">src/</div></th><th class="code"></th></tr></thead><tbody><tr id="section-1"><td class="docs"><div class="pilwrap"><a href="#section-1" class="pilcrow">&#182;</a></div><h1>Application</h1>
+</td><td class="code"><div class="highlight"><pre><span class="nx">SGAReader</span><span class="p">.</span><span class="nx">namespace</span> <span class="s">&quot;Application&quot;</span><span class="p">,</span> <span class="nf">(Application) -&gt;</span></pre></div></td></tr><tr id="section-2"><td class="docs"><div class="pilwrap"><a href="#section-2" class="pilcrow">&#182;</a></div><h2>Application.SharedCanvas</h2>
+</td><td class="code"><div class="highlight"><pre>  <span class="nx">Application</span><span class="p">.</span><span class="nx">namespace</span> <span class="s">&quot;SharedCanvas&quot;</span><span class="p">,</span> <span class="nf">(SharedCanvas) -&gt;</span>
+    <span class="nv">SharedCanvas.initInstance = </span><span class="nf">(args...) -&gt;</span>
+      <span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">Application</span><span class="p">.</span><span class="nx">initInstance</span> <span class="s">&quot;SGA.Reader.Application.SharedCanvas&quot;</span><span class="p">,</span> <span class="nx">args</span><span class="p">...,</span> <span class="nf">(that) -&gt;</span>
+        <span class="nv">options = </span><span class="nx">that</span><span class="p">.</span><span class="nx">options</span></pre></div></td></tr><tr id="section-3"><td class="docs"><div class="pilwrap"><a href="#section-3" class="pilcrow">&#182;</a></div><h3>Presentation Coordination</h3>
+</td><td class="code"><div class="highlight"><pre>        <span class="nv">presentations = </span><span class="p">[]</span></pre></div></td></tr><tr id="section-4"><td class="docs"><div class="pilwrap"><a href="#section-4" class="pilcrow">&#182;</a></div><p>This is a convenience method for creating a Shared Canvas
+presentation and tying it to the data management application.
+All presentations linked to this application will be coordinated
+when the current sequence or canvas changes.</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nv">that.addPresentation = </span><span class="nf">(config) -&gt;</span>
+          <span class="nv">p = </span><span class="nx">SGA</span><span class="p">.</span><span class="nx">Reader</span><span class="p">.</span><span class="nx">Presentation</span><span class="p">.</span><span class="nx">Canvas</span><span class="p">.</span><span class="nx">initInstance</span> <span class="nx">config</span><span class="p">.</span><span class="nx">container</span><span class="p">,</span>
+            <span class="nv">types: </span><span class="nx">config</span><span class="p">.</span><span class="nx">types</span>
+            <span class="nv">application: </span><span class="o">-&gt;</span> <span class="nx">that</span>
+            <span class="nv">dataView: </span><span class="nx">that</span><span class="p">.</span><span class="nx">dataView</span><span class="p">.</span><span class="nx">canvasAnnotations</span>
+          <span class="nx">presentations</span><span class="p">.</span><span class="nx">push</span> <span class="p">[</span> <span class="nx">p</span><span class="p">,</span> <span class="nx">config</span><span class="p">.</span><span class="nx">container</span> <span class="p">]</span></pre></div></td></tr><tr id="section-5"><td class="docs"><div class="pilwrap"><a href="#section-5" class="pilcrow">&#182;</a></div><p>When we change the sequence, we find out where our current
+canvas is in the new sequence and set the position to reflect
+the new relationship between the canvas and the current sequence.</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nv">currentSequence = </span><span class="kc">null</span>
+
+        <span class="nx">that</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onSequenceChange</span><span class="p">.</span><span class="nx">addListener</span> <span class="nf">(s) -&gt;</span>
+          <span class="nv">currentSequence = </span><span class="nx">s</span>
+          <span class="nv">seq = </span><span class="nx">that</span><span class="p">.</span><span class="nx">dataStore</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">getItem</span> <span class="nx">currentSequence</span>
+          <span class="nv">p = </span><span class="mi">0</span>
+          <span class="k">if</span> <span class="nx">seq</span><span class="o">?</span><span class="p">.</span><span class="nx">sequence</span><span class="o">?</span>
+            <span class="nv">p = </span><span class="nx">seq</span><span class="p">.</span><span class="nx">sequence</span><span class="p">.</span><span class="nx">indexOf</span> <span class="nx">that</span><span class="p">.</span><span class="nx">getCanvas</span><span class="p">()</span>
+          <span class="nv">p = </span><span class="mi">0</span> <span class="k">if</span> <span class="nx">p</span> <span class="o">&lt;</span> <span class="mi">0</span>
+          <span class="nx">that</span><span class="p">.</span><span class="nx">setPosition</span> <span class="nx">p</span>
+            </pre></div></td></tr><tr id="section-6"><td class="docs"><div class="pilwrap"><a href="#section-6" class="pilcrow">&#182;</a></div><p>The position lets us manage our path through a sequence without
+having to know the names of the canvases.</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nx">that</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onPositionChange</span><span class="p">.</span><span class="nx">addListener</span> <span class="nf">(p) -&gt;</span>
+          <span class="nv">seq = </span><span class="nx">that</span><span class="p">.</span><span class="nx">dataStore</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">getItem</span> <span class="nx">currentSequence</span>
+          <span class="nv">canvasKey = </span><span class="nx">seq</span><span class="p">.</span><span class="nx">sequence</span><span class="o">?</span><span class="p">[</span><span class="nx">p</span><span class="p">]</span>
+          <span class="nx">that</span><span class="p">.</span><span class="nx">setCanvas</span> <span class="nx">canvasKey</span></pre></div></td></tr><tr id="section-7"><td class="docs"><div class="pilwrap"><a href="#section-7" class="pilcrow">&#182;</a></div><p>But if we do know the name of the canvas we want to see, we
+can switch to it and everything else will be kept in sync as
+long as the canvas is in the current sequence.</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nx">that</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onCanvasChange</span><span class="p">.</span><span class="nx">addListener</span> <span class="nf">(k) -&gt;</span>
+          <span class="nx">that</span><span class="p">.</span><span class="nx">dataView</span><span class="p">.</span><span class="nx">canvasAnnotations</span><span class="p">.</span><span class="nx">setKey</span> <span class="nx">k</span>
+          <span class="nv">seq = </span><span class="nx">that</span><span class="p">.</span><span class="nx">dataStore</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">getItem</span> <span class="nx">currentSequence</span>
+          <span class="nv">p = </span><span class="nx">seq</span><span class="p">.</span><span class="nx">sequence</span><span class="p">.</span><span class="nx">indexOf</span> <span class="nx">k</span>
+          <span class="k">if</span> <span class="nx">p</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">p</span> <span class="o">!=</span> <span class="nx">that</span><span class="p">.</span><span class="nx">getPosition</span><span class="p">()</span>
+            <span class="nx">that</span><span class="p">.</span><span class="nx">setPosition</span> <span class="nx">p</span>
+          <span class="nx">pp</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">setCanvas</span> <span class="nx">k</span> <span class="k">for</span> <span class="nx">pp</span> <span class="k">in</span> <span class="nx">presentations</span>
+          <span class="nx">k</span></pre></div></td></tr><tr id="section-8"><td class="docs"><div class="pilwrap"><a href="#section-8" class="pilcrow">&#182;</a></div><h3>Manifest Import</h3>
+</td><td class="code"><div class="highlight"><pre></pre></div></td></tr><tr id="section-9"><td class="docs"><div class="pilwrap"><a href="#section-9" class="pilcrow">&#182;</a></div><p>manifestData holds the data read from the shared canvas
+manifest that we then process into the application's data store.</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nv">manifestData = </span><span class="nx">SGA</span><span class="p">.</span><span class="nx">Reader</span><span class="p">.</span><span class="nx">Data</span><span class="p">.</span><span class="nx">Manifest</span><span class="p">.</span><span class="nx">initInstance</span><span class="p">()</span></pre></div></td></tr><tr id="section-10"><td class="docs"><div class="pilwrap"><a href="#section-10" class="pilcrow">&#182;</a></div><p>We expose several of the manifestData methods so that things like
+the progress bar can know where we are in the process.</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nv">that.events.onItemsProcessedChange = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onItemsProcessedChange</span>
+        <span class="nv">that.events.onItemsToProcessChange = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onItemsToProcessChange</span>
+        <span class="nv">that.getItemsProcessed = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">getItemsProcessed</span>
+        <span class="nv">that.getItemsToProcess = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">getItemsToProcess</span>
+        <span class="nv">that.setItemsProcessed = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">setItemsProcessed</span>
+        <span class="nv">that.setItemsToProcess = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">setItemsToProcess</span>
+        <span class="nv">that.addItemsProcessed = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">addItemsProcessed</span>
+        <span class="nv">that.addItemsToProcess = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">addItemsToProcess</span></pre></div></td></tr><tr id="section-11"><td class="docs"><div class="pilwrap"><a href="#section-11" class="pilcrow">&#182;</a></div><p>textSource manages fetching and storing all of the TEI
+files that we will be referencing in our text content
+annotations.</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nv">textSource = </span><span class="nx">SGA</span><span class="p">.</span><span class="nx">Reader</span><span class="p">.</span><span class="nx">Data</span><span class="p">.</span><span class="nx">TextStore</span><span class="p">.</span><span class="nx">initInstance</span><span class="p">()</span>
+
+        <span class="nv">that.withSource = </span><span class="nx">textSource</span><span class="p">.</span><span class="nx">withFile</span></pre></div></td></tr><tr id="section-12"><td class="docs"><div class="pilwrap"><a href="#section-12" class="pilcrow">&#182;</a></div><p>styleSource manages extracting style information for
+CSS classes from CSS documents that might be embedded
+in the RDF graph. This is the new mechanism encouraged by
+the OA W3C group.</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nv">styleSource = </span><span class="nx">SGA</span><span class="p">.</span><span class="nx">Reader</span><span class="p">.</span><span class="nx">Data</span><span class="p">.</span><span class="nx">StyleStore</span><span class="p">.</span><span class="nx">initInstance</span><span class="p">()</span></pre></div></td></tr><tr id="section-13"><td class="docs"><div class="pilwrap"><a href="#section-13" class="pilcrow">&#182;</a></div><p>Given the id of a oahasSelector resource attached to
+a oaSpecificResource resource, extractSpatialContraint
+will find the type of spatial constraint and place the
+relavent bits into the given item.</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nv">extractSpatialConstraint = </span><span class="nf">(item, id) -&gt;</span>
+          <span class="k">return</span> <span class="nx">unless</span> <span class="nx">id</span><span class="o">?</span>
+          <span class="nv">constraint = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">getItem</span> <span class="nx">id</span></pre></div></td></tr><tr id="section-14"><td class="docs"><div class="pilwrap"><a href="#section-14" class="pilcrow">&#182;</a></div><p>oaFragmentSelector represents a rectangular area
+if it starts with "xywh=". We may expand to cover
+some SVG spatial constraints and oaFragmentSelector temporal
+constraints if we want to support video annotation.</p>
+</td><td class="code"><div class="highlight"><pre>          <span class="k">if</span> <span class="s">&#39;oaFragmentSelector&#39;</span> <span class="k">in</span> <span class="nx">constraint</span><span class="p">.</span><span class="nx">type</span>
+            <span class="k">if</span> <span class="nx">constraint</span><span class="p">.</span><span class="nx">rdfvalue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;xywh=&quot;</span>
+              <span class="nv">item.shape = </span><span class="s">&quot;Rectangle&quot;</span>
+              <span class="nv">bits = </span><span class="nx">constraint</span><span class="p">.</span><span class="nx">rdfvalue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">substr</span><span class="p">(</span><span class="mi">5</span><span class="p">).</span><span class="nx">split</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">)</span>
+              <span class="nv">item.x = </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">bits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">10</span><span class="p">)</span>
+              <span class="nv">item.y = </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">bits</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mi">10</span><span class="p">)</span>
+              <span class="nv">item.width = </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">bits</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="mi">10</span><span class="p">)</span>
+              <span class="nv">item.height = </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">bits</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="mi">10</span><span class="p">)</span>
+          <span class="k">else</span></pre></div></td></tr><tr id="section-15"><td class="docs"><div class="pilwrap"><a href="#section-15" class="pilcrow">&#182;</a></div><p>Otherwise, we expect this to be a text constraint.</p>
+</td><td class="code"><div class="highlight"><pre>            <span class="k">if</span> <span class="nx">constraint</span><span class="p">.</span><span class="nx">oaxbegin</span><span class="o">?</span>
+              <span class="nv">item.start = </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">constraint</span><span class="p">.</span><span class="nx">oaxbegin</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">10</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nx">constraint</span><span class="p">.</span><span class="nx">oaxend</span><span class="o">?</span>
+              <span class="nv">item.end = </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">constraint</span><span class="p">.</span><span class="nx">oaxend</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">10</span><span class="p">)</span></pre></div></td></tr><tr id="section-16"><td class="docs"><div class="pilwrap"><a href="#section-16" class="pilcrow">&#182;</a></div><p>Given the id of a oahasTarget, we put into the given item
+the information related to that target. We expect the target
+to be a text range.</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nv">extractTextTarget = </span><span class="nf">(item, annoItem, id) -&gt;</span>
+          <span class="k">return</span> <span class="nx">unless</span> <span class="nx">id</span><span class="o">?</span>
+          <span class="nv">target = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">getItem</span> <span class="nx">id</span>
+          <span class="k">if</span> <span class="s">&quot;oaSpecificResource&quot;</span> <span class="k">in</span> <span class="nx">target</span><span class="p">.</span><span class="nx">type</span>
+            <span class="nv">item.target = </span><span class="nx">target</span><span class="p">.</span><span class="nx">oahasSource</span></pre></div></td></tr><tr id="section-17"><td class="docs"><div class="pilwrap"><a href="#section-17" class="pilcrow">&#182;</a></div><p>N.B.: The style inclusion mechanism is changing!
+We want to use styleSource to manage CSS styles.</p>
+</td><td class="code"><div class="highlight"><pre>            <span class="k">if</span> <span class="nx">annoItem</span><span class="p">.</span><span class="nx">oastyledBy</span><span class="o">?</span> <span class="o">&amp;&amp;</span> <span class="nx">target</span><span class="p">.</span><span class="nx">oastyleClass</span><span class="o">?</span>
+              <span class="nv">cssStyleItem = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">getItem</span> <span class="nx">annoitem</span><span class="p">.</span><span class="nx">oastyledBy</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+              <span class="nx">styleSource</span><span class="p">.</span><span class="nx">addStyles</span> <span class="nx">cssStyleItem</span><span class="p">.</span><span class="nx">id</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">cssStyleItem</span><span class="p">.</span><span class="nx">cntchars</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+              <span class="nv">item.css = </span><span class="nx">styleSource</span><span class="p">.</span><span class="nx">getStylesForClass</span> <span class="nx">target</span><span class="p">.</span><span class="nx">oastyleClass</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span> <span class="k">if</span> <span class="nx">target</span><span class="p">.</span><span class="nx">oahasStyle</span><span class="o">?</span>
+              <span class="nv">styleItem = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">getItem</span> <span class="nx">target</span><span class="p">.</span><span class="nx">oahasStyle</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+              <span class="k">if</span> <span class="s">&quot;text/css&quot;</span> <span class="k">in</span> <span class="nx">styleItem</span><span class="p">.</span><span class="nx">dcformat</span>
+                <span class="nv">item.css = </span><span class="nx">styleItem</span><span class="p">.</span><span class="nx">cntchars</span>
+
+            <span class="nx">extractSpatialConstraint</span><span class="p">(</span><span class="nx">item</span><span class="p">,</span> <span class="nx">target</span><span class="p">.</span><span class="nx">oahasSelector</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+          <span class="k">else</span>
+            <span class="nv">item.target = </span><span class="nx">id</span></pre></div></td></tr><tr id="section-18"><td class="docs"><div class="pilwrap"><a href="#section-18" class="pilcrow">&#182;</a></div><p>Given the id of a oahasBody, we put into the given item
+the information related to that body. We expect the body to
+be a text range.</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nv">extractTextBody = </span><span class="nf">(item, id) -&gt;</span>
+          <span class="k">return</span> <span class="nx">unless</span> <span class="nx">id</span><span class="o">?</span>
+          <span class="nv">body = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">getItem</span> <span class="nx">id</span>
+          <span class="nx">textSource</span><span class="p">.</span><span class="nx">addFile</span><span class="p">(</span><span class="nx">body</span><span class="p">.</span><span class="nx">oahasSource</span><span class="p">)</span>
+          <span class="nv">item.source = </span><span class="nx">body</span><span class="p">.</span><span class="nx">oahasSource</span>
+          <span class="nx">extractSpatialConstraint</span><span class="p">(</span><span class="nx">item</span><span class="p">,</span> <span class="nx">body</span><span class="p">.</span><span class="nx">oahasSelector</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+
+        <span class="k">if</span> <span class="nx">options</span><span class="p">.</span><span class="nx">url</span><span class="o">?</span></pre></div></td></tr><tr id="section-19"><td class="docs"><div class="pilwrap"><a href="#section-19" class="pilcrow">&#182;</a></div><p>If we're given a URL in our options, then go ahead and load
+it. For now, this is the only way to get data from a manifest.</p>
+</td><td class="code"><div class="highlight"><pre>          <span class="nx">manifestData</span><span class="p">.</span><span class="nx">importFromURL</span> <span class="nx">options</span><span class="p">.</span><span class="nx">url</span><span class="p">,</span> <span class="o">-&gt;</span></pre></div></td></tr><tr id="section-20"><td class="docs"><div class="pilwrap"><a href="#section-20" class="pilcrow">&#182;</a></div><p>Once the RDF/JSON is loaded from the url and parsed into
+the manifestData triple store, we process it to pull out all
+of the features we care about.</p>
+</td><td class="code"><div class="highlight"><pre>            <span class="nv">items = </span><span class="p">[]</span>
+            <span class="nv">syncer = </span><span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">initSynchronizer</span><span class="p">()</span></pre></div></td></tr><tr id="section-21"><td class="docs"><div class="pilwrap"><a href="#section-21" class="pilcrow">&#182;</a></div><p>We begin by pulling out all of the canvases defined in the
+manifest. We only care about their id, size, and label.</p>
+</td><td class="code"><div class="highlight"><pre>            <span class="nv">canvases = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">getCanvases</span><span class="p">()</span>
+            <span class="nx">that</span><span class="p">.</span><span class="nx">addItemsToProcess</span> <span class="nx">canvases</span><span class="p">.</span><span class="nx">length</span>
+            <span class="nx">syncer</span><span class="p">.</span><span class="nx">process</span> <span class="nx">canvases</span><span class="p">,</span> <span class="nf">(id) -&gt;</span>
+              <span class="nx">that</span><span class="p">.</span><span class="nx">addItemsProcessed</span> <span class="mi">1</span>
+              <span class="nv">mitem = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">getItem</span> <span class="nx">id</span>
+              <span class="nx">items</span><span class="p">.</span><span class="nx">push</span>
+                <span class="nv">id: </span><span class="nx">id</span>
+                <span class="nv">type: </span><span class="s">&#39;Canvas&#39;</span>
+                <span class="nv">width: </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">mitem</span><span class="p">.</span><span class="nx">exifwidth</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">10</span><span class="p">)</span>
+                <span class="nv">height: </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">mitem</span><span class="p">.</span><span class="nx">exifheight</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">10</span><span class="p">)</span>
+                <span class="nv">label: </span><span class="nx">mitem</span><span class="p">.</span><span class="nx">dctitle</span> <span class="o">||</span> <span class="nx">mitem</span><span class="p">.</span><span class="nx">rdfslabel</span></pre></div></td></tr><tr id="section-22"><td class="docs"><div class="pilwrap"><a href="#section-22" class="pilcrow">&#182;</a></div><p>We want to add any zones that might be in the manifest. These
+are like canvases, but with the addition of a rotation angle.
+ZoneAnnotations map zones onto canvases.</p>
+</td><td class="code"><div class="highlight"><pre>            <span class="nv">zones = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">getZones</span><span class="p">()</span>
+            <span class="nx">that</span><span class="p">.</span><span class="nx">addItemsToProcess</span> <span class="nx">zones</span><span class="p">.</span><span class="nx">length</span>
+            <span class="nx">syncer</span><span class="p">.</span><span class="nx">process</span> <span class="nx">zones</span><span class="p">,</span> <span class="nf">(id) -&gt;</span>
+              <span class="nx">that</span><span class="p">.</span><span class="nx">addItemsProcessed</span> <span class="mi">1</span>
+              <span class="nv">zitem = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">getItem</span> <span class="nx">id</span>
+              <span class="nx">items</span><span class="p">.</span><span class="nx">push</span>
+                <span class="nv">id: </span><span class="nx">id</span>
+                <span class="nv">type: </span><span class="s">&#39;Zone&#39;</span>
+                <span class="nv">width: </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">mitem</span><span class="p">.</span><span class="nx">exifwidth</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">10</span><span class="p">)</span>
+                <span class="nv">height: </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">mitem</span><span class="p">.</span><span class="nx">exifheight</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">10</span><span class="p">)</span>
+                <span class="nv">angle: </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">mitem</span><span class="p">.</span><span class="nx">scnaturalAngle</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">10</span><span class="p">)</span> <span class="o">||</span> <span class="mi">0</span>
+                <span class="nv">label: </span><span class="nx">zitem</span><span class="p">.</span><span class="nx">rdfslabel</span></pre></div></td></tr><tr id="section-23"><td class="docs"><div class="pilwrap"><a href="#section-23" class="pilcrow">&#182;</a></div><p>We pull out all of the sequences in the manifest. MITHGrid
+stores a multi-valued property as an ordered list (JavaScript
+array), so we don't need all of the blank nodes that RDF uses.</p>
+
+<p>The primary or initial sequence is undefined if there are
+multiple sequences in the manifest.</p>
+</td><td class="code"><div class="highlight"><pre>            <span class="nv">seq = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">getSequences</span><span class="p">()</span>
+            <span class="nx">that</span><span class="p">.</span><span class="nx">addItemsToProcess</span> <span class="nx">seq</span><span class="p">.</span><span class="nx">length</span>
+            <span class="nx">syncer</span><span class="p">.</span><span class="nx">process</span> <span class="nx">seq</span><span class="p">,</span> <span class="nf">(id) -&gt;</span>
+              <span class="nx">that</span><span class="p">.</span><span class="nx">addItemsProcessed</span> <span class="mi">1</span>
+              <span class="nv">sitem = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">getItem</span> <span class="nx">id</span>
+              <span class="nv">item =</span>
+                <span class="nv">id: </span><span class="nx">id</span>
+                <span class="nv">type: </span><span class="s">&#39;Sequence&#39;</span>
+                <span class="nv">label: </span><span class="nx">sitem</span><span class="p">.</span><span class="nx">rdfslabel</span>
+
+              <span class="nv">seq = </span><span class="p">[]</span>
+              <span class="nx">seq</span><span class="p">.</span><span class="nx">push</span> <span class="nx">sitem</span><span class="p">.</span><span class="nx">rdffirst</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+              <span class="nv">sitem = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">getItem</span> <span class="nx">sitem</span><span class="p">.</span><span class="nx">rdfrest</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+              <span class="k">while</span> <span class="nx">sitem</span><span class="p">.</span><span class="nx">id</span><span class="o">?</span> <span class="c1"># manifestData.contains(sitem.rdfrest?[0])</span>
+                <span class="nx">seq</span><span class="p">.</span><span class="nx">push</span> <span class="nx">sitem</span><span class="p">.</span><span class="nx">rdffirst</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="nv">sitem = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">getItem</span> <span class="nx">sitem</span><span class="p">.</span><span class="nx">rdfrest</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+              <span class="nv">item.sequence = </span><span class="nx">seq</span>
+              <span class="nx">items</span><span class="p">.</span><span class="nx">push</span> <span class="nx">item</span>
+
+            <span class="nv">textSources = </span><span class="p">{}</span>
+            <span class="nv">textAnnos = </span><span class="p">[]</span></pre></div></td></tr><tr id="section-24"><td class="docs"><div class="pilwrap"><a href="#section-24" class="pilcrow">&#182;</a></div><p>We pull out all of the annotations (oa:Annotation) items and
+process the ones we know about.</p>
+</td><td class="code"><div class="highlight"><pre>            <span class="nv">annos = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">getAnnotations</span><span class="p">()</span>
+            <span class="nx">that</span><span class="p">.</span><span class="nx">addItemsToProcess</span> <span class="nx">annos</span><span class="p">.</span><span class="nx">length</span>
+            <span class="nx">syncer</span><span class="p">.</span><span class="nx">process</span> <span class="nx">annos</span><span class="p">,</span> <span class="nf">(id) -&gt;</span></pre></div></td></tr><tr id="section-25"><td class="docs"><div class="pilwrap"><a href="#section-25" class="pilcrow">&#182;</a></div><p>Once we have our various annotations, we want to process
+them to produce sets of items that can be displayed in a
+sequence. We preprocess overlapping ranges of highlights
+to create non-overlapping multi-classed items that can
+be filtered in the final presentation.</p>
+</td><td class="code"><div class="highlight"><pre>              <span class="nx">that</span><span class="p">.</span><span class="nx">addItemsProcessed</span> <span class="mi">1</span>
+              <span class="nv">aitem = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">getItem</span> <span class="nx">id</span>
+              <span class="nv">array = </span><span class="kc">null</span>
+              <span class="nv">item =</span>
+                <span class="nv">id: </span><span class="nx">id</span></pre></div></td></tr><tr id="section-26"><td class="docs"><div class="pilwrap"><a href="#section-26" class="pilcrow">&#182;</a></div><p>For now, we <em>assume</em> that the content annotation is coming
+from a TEI file and is marked by begin/end pointers.
+These annotations are loaded into the triple store as they
+are since they don't target sub-ranges of text.
+TextContent items end up acting like zones in that they
+are the target of text annotations but don't themselves
+end up providing content.</p>
+</td><td class="code"><div class="highlight"><pre>              <span class="k">if</span> <span class="s">&quot;scContentAnnotation&quot;</span> <span class="k">in</span> <span class="nx">aitem</span><span class="p">.</span><span class="nx">type</span>
+                <span class="nx">extractTextTarget</span> <span class="nx">item</span><span class="p">,</span> <span class="nx">aitem</span><span class="p">,</span> <span class="nx">aitem</span><span class="p">.</span><span class="nx">oahasTarget</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="nx">extractTextBody</span>   <span class="nx">item</span><span class="p">,</span> <span class="nx">aitem</span><span class="p">.</span><span class="nx">oahasBody</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="nx">textSources</span><span class="p">[</span><span class="nx">item</span><span class="p">.</span><span class="nx">source</span><span class="p">]</span> <span class="o">?=</span> <span class="p">[]</span>
+                <span class="nx">textSources</span><span class="p">[</span><span class="nx">item</span><span class="p">.</span><span class="nx">source</span><span class="p">].</span><span class="nx">push</span> <span class="p">[</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">item</span><span class="p">.</span><span class="nx">start</span><span class="p">,</span> <span class="nx">item</span><span class="p">.</span><span class="nx">end</span> <span class="p">]</span>
+                <span class="nv">item.type = </span><span class="s">&quot;TextContent&quot;</span>
+                <span class="nv">array = </span><span class="nx">items</span></pre></div></td></tr><tr id="section-27"><td class="docs"><div class="pilwrap"><a href="#section-27" class="pilcrow">&#182;</a></div><p>For now, we assume that images map onto the entire canvas.
+This isn't true for Shared Canvas. We need to extract any
+spatial constraint and respect it in the presentation.</p>
+</td><td class="code"><div class="highlight"><pre>              <span class="k">else</span> <span class="k">if</span> <span class="s">&quot;scImageAnnotation&quot;</span> <span class="k">in</span> <span class="nx">aitem</span><span class="p">.</span><span class="nx">type</span>
+                <span class="nv">imgitem = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">getItem</span> <span class="nx">aitem</span><span class="p">.</span><span class="nx">oahasBody</span>
+                <span class="nv">imgitem = </span><span class="nx">imgitem</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nx">$</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">imgitem</span><span class="p">)</span>
+                <span class="nv">array = </span><span class="nx">items</span>
+
+                <span class="nv">item.target = </span><span class="nx">aitem</span><span class="p">.</span><span class="nx">oahasTarget</span>
+                <span class="nv">item.label = </span><span class="nx">aitem</span><span class="p">.</span><span class="nx">rdfslabel</span>
+                <span class="nv">item.image = </span><span class="nx">imgitem</span><span class="p">.</span><span class="nx">oahasSource</span> <span class="o">||</span> <span class="nx">aitem</span><span class="p">.</span><span class="nx">oahasBody</span>
+                <span class="nv">item.type = </span><span class="s">&quot;Image&quot;</span>
+
+              <span class="k">else</span> <span class="k">if</span> <span class="s">&quot;scZoneAnnotation&quot;</span> <span class="k">in</span> <span class="nx">aitem</span><span class="p">.</span><span class="nx">type</span>
+                <span class="nv">target = </span><span class="nx">manifestData</span><span class="p">.</span><span class="nx">getItem</span> <span class="nx">aitem</span><span class="p">.</span><span class="nx">oahasTarget</span>
+                <span class="nx">extractSpatialConstraint</span> <span class="nx">item</span><span class="p">,</span> <span class="nx">target</span><span class="p">.</span><span class="nx">hasSelector</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="nv">array = </span><span class="nx">items</span>
+
+                <span class="nv">item.target = </span><span class="nx">target</span><span class="p">.</span><span class="nx">hasSource</span>
+                <span class="nv">item.label = </span><span class="nx">aitem</span><span class="p">.</span><span class="nx">rdfslabel</span>
+                <span class="nv">item.type = </span><span class="s">&quot;ZoneAnnotation&quot;</span>
+
+              <span class="k">else</span></pre></div></td></tr><tr id="section-28"><td class="docs"><div class="pilwrap"><a href="#section-28" class="pilcrow">&#182;</a></div><p>All of the SGA-specific annotations will have types
+prefixed with "sga" and ending in "Annotation"</p>
+</td><td class="code"><div class="highlight"><pre>                <span class="nv">sgaTypes = </span><span class="p">(</span><span class="nx">f</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="nx">f</span> <span class="k">in</span> <span class="nx">aitem</span><span class="p">.</span><span class="nx">type</span> <span class="k">when</span> <span class="nx">f</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;sga&quot;</span> <span class="o">and</span> <span class="nx">f</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="nx">f</span><span class="p">.</span><span class="nx">length</span><span class="o">-</span><span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;Annotation&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nx">sgaTypes</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span>
+                  <span class="nx">extractTextTarget</span> <span class="nx">item</span><span class="p">,</span> <span class="nx">aitem</span><span class="p">,</span> <span class="nx">aitem</span><span class="p">.</span><span class="nx">oahasTarget</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                  <span class="nv">item.type = </span><span class="nx">sgaTypes</span>
+                  <span class="nv">array = </span><span class="nx">textAnnos</span>
+
+              <span class="nx">array</span><span class="p">.</span><span class="nx">push</span> <span class="nx">item</span> <span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">type</span><span class="o">?</span> <span class="o">and</span> <span class="nx">array</span><span class="o">?</span>
+
+            <span class="nx">syncer</span><span class="p">.</span><span class="nx">done</span> <span class="o">-&gt;</span></pre></div></td></tr><tr id="section-29"><td class="docs"><div class="pilwrap"><a href="#section-29" class="pilcrow">&#182;</a></div><p>We process the highlight annotations here so we don't have
+to do it <em>every</em> time we show a canvas.
+each addition, deletion, etc., targets a scContentAnnotation
+but we want to make sure we get any scContentAnnotation text
+that isn't covered by any of the other annotations</p>
+</td><td class="code"><div class="highlight"><pre>              
+              <span class="nx">that</span><span class="p">.</span><span class="nx">addItemsToProcess</span> <span class="mi">1</span> <span class="o">+</span> <span class="nx">textAnnos</span><span class="p">.</span><span class="nx">length</span>
+              <span class="nx">that</span><span class="p">.</span><span class="nx">dataStore</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">loadItems</span> <span class="nx">items</span><span class="p">,</span> <span class="o">-&gt;</span>
+                <span class="nv">items = </span><span class="p">[]</span>
+                <span class="nv">modstart = </span><span class="p">{}</span>
+                <span class="nv">modend = </span><span class="p">{}</span>
+                <span class="nv">modInfo = </span><span class="p">{}</span>
+                <span class="nv">setMod = </span><span class="nf">(item) -&gt;</span>
+                  <span class="nv">source = </span><span class="nx">item</span><span class="p">.</span><span class="nx">target</span>
+                  <span class="nv">start = </span><span class="nx">item</span><span class="p">.</span><span class="nx">start</span>
+                  <span class="nv">end = </span><span class="nx">item</span><span class="p">.</span><span class="nx">end</span>
+                  <span class="nv">id = </span><span class="nx">item</span><span class="p">.</span><span class="nx">id</span>
+                  <span class="nv">id = </span><span class="nx">id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nx">$</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span>
+                  <span class="nx">modInfo</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="nx">item</span>
+                  <span class="nx">modstart</span><span class="p">[</span><span class="nx">source</span><span class="p">]</span> <span class="o">?=</span> <span class="p">{}</span>
+                  <span class="nx">modstart</span><span class="p">[</span><span class="nx">source</span><span class="p">][</span><span class="nx">start</span><span class="p">]</span> <span class="o">?=</span> <span class="p">[]</span>
+                  <span class="nx">modstart</span><span class="p">[</span><span class="nx">source</span><span class="p">][</span><span class="nx">start</span><span class="p">].</span><span class="nx">push</span> <span class="nx">id</span>
+                  <span class="nx">modend</span><span class="p">[</span><span class="nx">source</span><span class="p">]</span> <span class="o">?=</span> <span class="p">{}</span>
+                  <span class="nx">modend</span><span class="p">[</span><span class="nx">source</span><span class="p">][</span><span class="nx">end</span><span class="p">]</span> <span class="o">?=</span> <span class="p">[]</span>
+                  <span class="nx">modend</span><span class="p">[</span><span class="nx">source</span><span class="p">][</span><span class="nx">end</span><span class="p">].</span><span class="nx">push</span> <span class="nx">id</span>
+
+                <span class="nx">setMod</span> <span class="nx">item</span> <span class="k">for</span> <span class="nx">item</span> <span class="k">in</span> <span class="nx">textAnnos</span>
+
+                <span class="nv">sources = </span><span class="p">(</span><span class="nx">s</span> <span class="k">for</span> <span class="nx">s</span> <span class="k">of</span> <span class="nx">modstart</span><span class="p">)</span>
+                <span class="nx">that</span><span class="p">.</span><span class="nx">addItemsToProcess</span> <span class="nx">sources</span><span class="p">.</span><span class="nx">length</span>
+                <span class="nx">that</span><span class="p">.</span><span class="nx">addItemsProcessed</span> <span class="nx">textAnnos</span><span class="p">.</span><span class="nx">length</span>
+
+                <span class="k">for</span> <span class="nx">source</span> <span class="k">in</span> <span class="nx">sources</span>
+                  <span class="nx">do</span> <span class="nf">(source) -&gt;</span>
+                    <span class="nx">that</span><span class="p">.</span><span class="nx">withSource</span> <span class="nx">source</span><span class="p">,</span> <span class="nf">(text) -&gt;</span>
+                      <span class="nv">textItems = </span><span class="p">[]</span>
+                      <span class="nv">modIds = </span><span class="p">[</span> <span class="p">]</span>
+                      <span class="nv">br_pushed = </span><span class="kc">false</span>
+
+                      <span class="nv">pushTextItem = </span><span class="nf">(classes, css, target, start, end) -&gt;</span>
+                        <span class="nx">textItems</span><span class="p">.</span><span class="nx">push</span>
+                          <span class="nv">type: </span><span class="nx">classes</span>
+                          <span class="nv">css: </span><span class="nx">css</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">)</span>
+                          <span class="nv">text: </span><span class="nx">text</span><span class="p">[</span><span class="nx">start</span> <span class="p">...</span> <span class="nx">end</span><span class="p">]</span>
+                          <span class="nv">id: </span><span class="nx">source</span> <span class="o">+</span> <span class="s">&quot;-&quot;</span> <span class="o">+</span> <span class="nx">start</span> <span class="o">+</span> <span class="s">&quot;-&quot;</span> <span class="o">+</span> <span class="nx">end</span>
+                          <span class="nv">target: </span><span class="nx">target</span>
+                          <span class="nv">start: </span><span class="nx">start</span>
+                          <span class="nv">end: </span><span class="nx">end</span>
+                      
+                      <span class="nv">processNode = </span><span class="nf">(start, end) -&gt;</span>
+                        <span class="nv">classes = </span><span class="p">[]</span>
+                        <span class="nv">css = </span><span class="p">[]</span>
+                        <span class="k">for</span> <span class="nx">id</span> <span class="k">in</span> <span class="nx">modIds</span>
+                          <span class="nx">classes</span><span class="p">.</span><span class="nx">push</span> <span class="nx">modInfo</span><span class="p">[</span><span class="nx">id</span><span class="p">].</span><span class="nx">type</span>
+                          <span class="k">if</span> <span class="nx">$</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">modInfo</span><span class="p">[</span><span class="nx">id</span><span class="p">].</span><span class="nx">css</span><span class="p">)</span>
+                            <span class="nx">css</span><span class="p">.</span><span class="nx">push</span> <span class="nx">modInfo</span><span class="p">[</span><span class="nx">id</span><span class="p">].</span><span class="nx">css</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">)</span>
+                          <span class="k">else</span>
+                            <span class="nx">css</span><span class="p">.</span><span class="nx">push</span> <span class="nx">modInfo</span><span class="p">[</span><span class="nx">id</span><span class="p">].</span><span class="nx">css</span>
+
+                        <span class="nx">classes</span><span class="p">.</span><span class="nx">push</span> <span class="s">&quot;Text&quot;</span> <span class="k">if</span> <span class="nx">classes</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">0</span>
+
+                        <span class="nx">makeTextItems</span> <span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">,</span> <span class="nx">classes</span><span class="p">,</span> <span class="nx">css</span></pre></div></td></tr><tr id="section-30"><td class="docs"><div class="pilwrap"><a href="#section-30" class="pilcrow">&#182;</a></div><p>We run through each possible shared canvas
+target that might be mapped onto the source TEI
+via the TextContent annotation. We want to target
+the shared canvas text content zone, not the
+text source that the highlight is targeting in the
+actual open annotation model.</p>
+</td><td class="code"><div class="highlight"><pre>                      <span class="nv">makeTextItems = </span><span class="nf">(start, end, classes, css) -&gt;</span>
+                        <span class="k">for</span> <span class="nx">candidate</span> <span class="k">in</span> <span class="p">(</span><span class="nx">textSources</span><span class="p">[</span><span class="nx">source</span><span class="p">]</span> <span class="o">||</span> <span class="p">[])</span>
+                          <span class="k">if</span> <span class="nx">start</span> <span class="o">&lt;=</span> <span class="nx">candidate</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">and</span> <span class="nx">end</span> <span class="o">&gt;=</span> <span class="nx">candidate</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                            <span class="nv">s = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">candidate</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="nx">candidate</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                            <span class="nv">e = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nx">end</span><span class="p">,</span> <span class="nx">candidate</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="nx">candidate</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                            <span class="nx">pushTextItem</span> <span class="nx">classes</span><span class="p">,</span> <span class="nx">css</span><span class="p">,</span> <span class="nx">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">e</span>
+                        <span class="kc">false</span></pre></div></td></tr><tr id="section-31"><td class="docs"><div class="pilwrap"><a href="#section-31" class="pilcrow">&#182;</a></div><p>A line break is just a zero-width annotation at
+the given position.</p>
+</td><td class="code"><div class="highlight"><pre>                      <span class="nv">makeLinebreak = </span><span class="nf">(pos) -&gt;</span>
+                        <span class="nv">classes = </span><span class="p">[</span> <span class="s">&quot;LineBreak&quot;</span> <span class="p">]</span></pre></div></td></tr><tr id="section-32"><td class="docs"><div class="pilwrap"><a href="#section-32" class="pilcrow">&#182;</a></div><p>classes.push modInfo[id].type for id in modIds</p>
+</td><td class="code"><div class="highlight"><pre>                        <span class="nx">makeTextItems</span> <span class="nx">pos</span><span class="p">,</span> <span class="nx">pos</span><span class="p">,</span> <span class="nx">classes</span><span class="p">,</span> <span class="p">[</span> <span class="s">&quot;&quot;</span> <span class="p">]</span></pre></div></td></tr><tr id="section-33"><td class="docs"><div class="pilwrap"><a href="#section-33" class="pilcrow">&#182;</a></div>
+</td><td class="code"><div class="highlight"><pre>                      <span class="nv">mstarts = </span><span class="nx">modstart</span><span class="p">[</span><span class="nx">source</span><span class="p">]</span> <span class="o">||</span> <span class="p">[]</span>
+                      <span class="nv">mends = </span><span class="nx">modend</span><span class="p">[</span><span class="nx">source</span><span class="p">]</span> <span class="o">||</span> <span class="p">[]</span>
+                      <span class="nv">last_pos = </span><span class="mi">0</span>
+                      <span class="nv">positions = </span><span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">p</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span> <span class="k">for</span> <span class="nx">p</span> <span class="k">of</span> <span class="nx">mstarts</span><span class="p">).</span><span class="nx">concat</span><span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">p</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span> <span class="k">for</span> <span class="nx">p</span> <span class="k">of</span> <span class="nx">mends</span><span class="p">).</span><span class="nx">sort</span> <span class="nf">(a,b) -&gt;</span> <span class="nx">a</span><span class="o">-</span><span class="nx">b</span>
+                      <span class="k">for</span> <span class="nx">pos</span> <span class="k">in</span> <span class="nx">positions</span>
+                        <span class="k">if</span> <span class="nx">pos</span> <span class="o">!=</span> <span class="nx">last_pos</span>
+                          <span class="nx">processNode</span> <span class="nx">last_pos</span><span class="p">,</span> <span class="nx">pos</span>
+                          <span class="k">if</span> <span class="nx">br_pushed</span> <span class="o">and</span> <span class="o">!</span><span class="nx">text</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="nx">last_pos</span><span class="p">,</span> <span class="nx">pos</span> <span class="o">-</span> <span class="nx">last_pos</span><span class="p">).</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^\s*$/</span><span class="p">)</span>
+                            <span class="nv">br_pushed = </span><span class="kc">false</span>
+                          <span class="nv">needs_br = </span><span class="kc">false</span>
+                          <span class="k">for</span> <span class="nx">id</span> <span class="k">in</span> <span class="p">(</span><span class="nx">mstarts</span><span class="p">[</span><span class="nx">pos</span><span class="p">]</span> <span class="o">||</span> <span class="p">[])</span>
+                            <span class="k">if</span> <span class="s">&quot;LineAnnotation&quot;</span> <span class="k">in</span> <span class="nx">modInfo</span><span class="p">[</span><span class="nx">id</span><span class="p">].</span><span class="nx">type</span>
+                              <span class="nv">needs_br = </span><span class="kc">true</span>
+                            <span class="nx">modIds</span><span class="p">.</span><span class="nx">push</span> <span class="nx">id</span>
+                          <span class="k">for</span> <span class="nx">id</span> <span class="k">in</span> <span class="p">(</span><span class="nx">mends</span><span class="p">[</span><span class="nx">pos</span><span class="p">]</span> <span class="o">||</span> <span class="p">[])</span>
+                            <span class="k">if</span> <span class="s">&quot;LineAnnotation&quot;</span> <span class="k">in</span> <span class="nx">modInfo</span><span class="p">[</span><span class="nx">id</span><span class="p">].</span><span class="nx">type</span>
+                              <span class="nv">needs_br = </span><span class="kc">true</span>
+                            <span class="nv">idx = </span><span class="nx">modIds</span><span class="p">.</span><span class="nx">indexOf</span> <span class="nx">id</span>
+                            <span class="nx">modIds</span><span class="p">.</span><span class="nx">splice</span> <span class="nx">idx</span><span class="p">,</span> <span class="mi">1</span> <span class="k">if</span> <span class="nx">idx</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span>
+                          <span class="k">if</span> <span class="nx">needs_br</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">br_pushed</span>
+                            <span class="nx">makeLinebreak</span> <span class="nx">pos</span>
+                            <span class="nv">br_pushed = </span><span class="kc">true</span>
+                          <span class="nv">last_pos = </span><span class="nx">pos</span>
+                      <span class="nx">processNode</span> <span class="nx">last_pos</span><span class="p">,</span> <span class="nx">text</span><span class="p">.</span><span class="nx">length</span>
+
+                      <span class="nx">that</span><span class="p">.</span><span class="nx">dataStore</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">loadItems</span> <span class="nx">textItems</span><span class="p">,</span> <span class="o">-&gt;</span>
+                        <span class="nx">that</span><span class="p">.</span><span class="nx">addItemsProcessed</span> <span class="mi">1</span>
+                    
+                <span class="nx">that</span><span class="p">.</span><span class="nx">addItemsProcessed</span> <span class="mi">1</span></pre></div></td></tr><tr id="section-34"><td class="docs"><div class="pilwrap"><a href="#section-34" class="pilcrow">&#182;</a></div><h3>Application.SharedCanvas#builder</h3>
+
+<p>This is an alternate instantiation method that will look through the
+DOM and find elements with the given class and instantiate
+Application.SharedCanvas applications for each manifest found along
+with Presentation.Canvas presentations for each element.</p>
+
+<p>Options:</p>
+
+<ul>
+<li>class - the CSS class of the elements (defaults to "canvas")</li>
+<li>progressTracker - a component with the setNumerator and
+setDenominator methods that can show progress to the user</li>
+</ul>
+</td><td class="code"><div class="highlight"><pre>    <span class="nv">SharedCanvas.builder = </span><span class="nf">(config) -&gt;</span>
+      <span class="nv">that =</span>
+        <span class="nv">manifests: </span><span class="p">{}</span>
+
+      <span class="nv">manifestCallbacks = </span><span class="p">{}</span></pre></div></td></tr><tr id="section-35"><td class="docs"><div class="pilwrap"><a href="#section-35" class="pilcrow">&#182;</a></div><p>Initialize these to nil functions in case we don't have a progress
+tracker. Also makes sure that CoffeeScript scopes them correctly.</p>
+</td><td class="code"><div class="highlight"><pre>      <span class="nv">updateProgressTracker = </span><span class="o">-&gt;</span>
+      <span class="nv">updateProgressTrackerVisibility = </span><span class="o">-&gt;</span>
+
+      <span class="k">if</span> <span class="nx">config</span><span class="p">.</span><span class="nx">progressTracker</span><span class="o">?</span>
+        <span class="nv">updateProgressTracker = </span><span class="o">-&gt;</span></pre></div></td></tr><tr id="section-36"><td class="docs"><div class="pilwrap"><a href="#section-36" class="pilcrow">&#182;</a></div><p>Go through and calculate all of the unfinished items. Then
+update the progress tracker. Should work even if a builder
+is tracking multiple manifests.</p>
+</td><td class="code"><div class="highlight"><pre>          <span class="nv">n = </span><span class="mi">0</span>
+          <span class="nv">d = </span><span class="mi">0</span>
+          <span class="k">for</span> <span class="nx">m</span><span class="p">,</span> <span class="nx">obj</span> <span class="k">of</span> <span class="nx">that</span><span class="p">.</span><span class="nx">manifests</span>
+            <span class="nx">n</span> <span class="o">+=</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">getItemsProcessed</span><span class="p">()</span>
+            <span class="nx">d</span> <span class="o">+=</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">getItemsToProcess</span><span class="p">()</span>
+          <span class="nx">config</span><span class="p">.</span><span class="nx">progressTracker</span><span class="p">.</span><span class="nx">setNumerator</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span>
+          <span class="nx">config</span><span class="p">.</span><span class="nx">progressTracker</span><span class="p">.</span><span class="nx">setDenominator</span><span class="p">(</span><span class="nx">d</span> <span class="o">or</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="nv">uptv = </span><span class="kc">null</span>
+        <span class="nv">uptvTimer = </span><span class="mi">1000</span>
+
+        <span class="nv">updateProgressTrackerVisibility = </span><span class="o">-&gt;</span>
+          <span class="k">if</span> <span class="nx">uptv</span><span class="o">?</span>
+            <span class="nv">uptvTimer = </span><span class="mi">500</span>
+          <span class="k">else</span>
+            <span class="nv">uptv = </span><span class="o">-&gt;</span>
+              <span class="k">for</span> <span class="nx">m</span><span class="p">,</span> <span class="nx">obj</span> <span class="k">of</span> <span class="nx">that</span><span class="p">.</span><span class="nx">manifests</span>
+                <span class="k">if</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">getItemsToProcess</span><span class="p">()</span> <span class="o">&gt;</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">getItemsProcessed</span><span class="p">()</span>
+                  <span class="nx">config</span><span class="p">.</span><span class="nx">progressTracker</span><span class="p">.</span><span class="nx">show</span><span class="p">()</span>
+                  <span class="nx">uptvTimer</span> <span class="o">/=</span> <span class="mi">2</span>
+                  <span class="nv">uptvTimer = </span><span class="mi">500</span> <span class="k">if</span> <span class="nx">uptvTimer</span> <span class="o">&lt;</span> <span class="mi">500</span>
+                  <span class="nx">setTimeout</span> <span class="nx">uptv</span><span class="p">,</span> <span class="nx">uptvTimer</span>
+                  <span class="k">return</span>
+              <span class="nx">config</span><span class="p">.</span><span class="nx">progressTracker</span><span class="p">.</span><span class="nx">hide</span><span class="p">()</span> <span class="k">if</span> <span class="nx">uptvTimer</span> <span class="o">&gt;</span> <span class="mi">500</span>
+              <span class="nx">uptvTimer</span> <span class="o">*=</span> <span class="mi">2</span>
+              <span class="nv">uptvTimer = </span><span class="mi">10000</span> <span class="k">if</span> <span class="nx">uptvTimer</span> <span class="o">&gt;</span> <span class="mi">10000</span>
+              <span class="nx">setTimeout</span> <span class="nx">uptv</span><span class="p">,</span> <span class="nx">uptvTimer</span>
+            <span class="nx">uptv</span><span class="p">()</span></pre></div></td></tr><tr id="section-37"><td class="docs"><div class="pilwrap"><a href="#section-37" class="pilcrow">&#182;</a></div><h4>#onManifest</h4>
+
+<ul>
+<li>url: manifest URL</li>
+<li>cb: callback to call when the manifest is loaded and ready</li>
+</ul>
+
+<p>This function accepts a callback function that will be called
+when the manifest has been loaded and processed. The callback will
+receive one argument representing the Application.SharedCanvas
+instance associated with the manifest URL.</p>
+</td><td class="code"><div class="highlight"><pre>      <span class="nv">that.onManifest = </span><span class="nf">(url, cb) -&gt;</span>
+        <span class="k">if</span> <span class="nx">that</span><span class="p">.</span><span class="nx">manifests</span><span class="p">[</span><span class="nx">url</span><span class="p">]</span><span class="o">?</span>
+          <span class="nx">that</span><span class="p">.</span><span class="nx">manifests</span><span class="p">[</span><span class="nx">url</span><span class="p">].</span><span class="nx">ready</span> <span class="o">-&gt;</span>
+            <span class="nx">cb</span> <span class="nx">that</span><span class="p">.</span><span class="nx">manifests</span><span class="p">[</span><span class="nx">url</span><span class="p">]</span>
+        <span class="k">else</span>
+          <span class="nx">manifestCallbacks</span><span class="p">[</span><span class="nx">url</span><span class="p">]</span> <span class="o">?=</span> <span class="p">[]</span>
+          <span class="nx">manifestCallbacks</span><span class="p">[</span><span class="nx">url</span><span class="p">].</span><span class="nx">push</span> <span class="nx">cb</span></pre></div></td></tr><tr id="section-38"><td class="docs"><div class="pilwrap"><a href="#section-38" class="pilcrow">&#182;</a></div><h4>#addPresentation</h4>
+
+<ul>
+<li>el: the DOM element to contain the shared canvas presentation</li>
+</ul>
+
+<p>The element should have the following data- attributes:</p>
+
+<ul>
+<li>data-manifest: the URL of the manifest</li>
+<li>data-types: a comma-separated list of annotation types to render</li>
+</ul>
+
+<p>The data types can be any of the following:</p>
+
+<ul>
+<li>Image: render any image annotations</li>
+<li>Text: render any text annotations</li>
+</ul>
+
+<p>N.B.: non-text and non-image annotations will still render. For example,
+zones will render regardless of the types. Zones inherit the types,
+so zones in a Text-only rendering will only render text annotations.</p>
+</td><td class="code"><div class="highlight"><pre>      <span class="nv">that.addPresentation = </span><span class="nf">(el) -&gt;</span>
+        <span class="nv">manifestUrl = </span><span class="nx">$</span><span class="p">(</span><span class="nx">el</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s">&#39;manifest&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nx">manifestUrl</span><span class="o">?</span>
+          <span class="nv">manifest = </span><span class="nx">that</span><span class="p">.</span><span class="nx">manifests</span><span class="p">[</span><span class="nx">manifestUrl</span><span class="p">]</span>
+          <span class="k">if</span> <span class="o">!</span><span class="nx">manifest</span><span class="o">?</span>
+            <span class="nv">manifest = </span><span class="nx">Application</span><span class="p">.</span><span class="nx">SharedCanvas</span><span class="p">.</span><span class="nx">initInstance</span>
+              <span class="nv">url: </span><span class="nx">manifestUrl</span>
+            <span class="nx">that</span><span class="p">.</span><span class="nx">manifests</span><span class="p">[</span><span class="nx">manifestUrl</span><span class="p">]</span> <span class="o">=</span> <span class="nx">manifest</span>
+            <span class="nx">manifest</span><span class="p">.</span><span class="nx">ready</span> <span class="o">-&gt;</span> 
+              <span class="nv">cbs = </span><span class="nx">manifestCallbacks</span><span class="p">[</span><span class="nx">manifestUrl</span><span class="p">]</span> <span class="o">||</span> <span class="p">[]</span>
+              <span class="nx">cb</span><span class="p">(</span><span class="nx">manifest</span><span class="p">)</span> <span class="k">for</span> <span class="nx">cb</span> <span class="k">in</span> <span class="nx">cbs</span>
+              <span class="k">delete</span> <span class="nx">manifestCallbacks</span><span class="p">[</span><span class="nx">manifestUrl</span><span class="p">]</span>
+            <span class="nx">manifest</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onItemsToProcessChange</span><span class="p">.</span><span class="nx">addListener</span> <span class="nx">updateProgressTracker</span>
+            <span class="nx">manifest</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onItemsProcessedChange</span><span class="p">.</span><span class="nx">addListener</span> <span class="nx">updateProgressTracker</span>
+            <span class="nx">updateProgressTrackerVisibility</span><span class="p">()</span>
+              
+          <span class="nx">manifest</span><span class="p">.</span><span class="nx">run</span><span class="p">()</span>
+          <span class="nv">types = </span><span class="nx">$</span><span class="p">(</span><span class="nx">el</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s">&#39;types&#39;</span><span class="p">)</span><span class="o">?</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="sr">/\s*,\s*/</span><span class="p">)</span>
+          <span class="nx">that</span><span class="p">.</span><span class="nx">onManifest</span> <span class="nx">manifestUrl</span><span class="p">,</span> <span class="nf">(manifest) -&gt;</span>
+            <span class="nx">manifest</span><span class="p">.</span><span class="nx">addPresentation</span>
+              <span class="nv">types: </span><span class="nx">types</span>
+              <span class="nv">container: </span><span class="nx">$</span><span class="p">(</span><span class="nx">el</span><span class="p">)</span>
+        </pre></div></td></tr><tr id="section-39"><td class="docs"><div class="pilwrap"><a href="#section-39" class="pilcrow">&#182;</a></div><p>Now we go through and find all of the DOM elements that should be
+made into shared canvas presentations.</p>
+</td><td class="code"><div class="highlight"><pre>      <span class="nx">config</span><span class="p">.</span><span class="k">class</span> <span class="o">?=</span> <span class="s">&quot;.canvas&quot;</span>
+      <span class="nx">$</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="k">class</span><span class="p">).</span><span class="nx">each</span> <span class="nf">(idx, el) -&gt;</span> <span class="nx">that</span><span class="p">.</span><span class="nx">addPresentation</span> <span class="nx">el</span>
+      <span class="nx">that</span>
+
+</pre></div></td></tr></tbody></table><div id="generated">generated Mon Jan 07 2013 15:18:16 GMT-0500 (EST)  </div><div id="projectname"><a href="../index.html">SGA Shared Canvas Viewer</a></div></div>

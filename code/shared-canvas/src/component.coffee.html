@@ -1,0 +1,122 @@
+---
+layout: docco
+title: sga/code/shared-canvas/src/component.coffee.html
+---
+<div id="container"><div id="background"></div><div id="jump_to">Jump To &hellip;<div id="jump_wrapper"><div id="jump_page"><a href="../index.html" class="source"><span class="file_name">README</span></a><a href="../src/application.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">application.coffee</span></a><a href="../src/component.coffee.html" class="source selected"><span class="base_path">src / </span><span class="file_name">component.coffee</span></a><a href="../src/controller.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">controller.coffee</span></a><a href="../src/core.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">core.coffee</span></a><a href="../src/data.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">data.coffee</span></a><a href="../src/intro.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">intro.coffee</span></a><a href="../src/outro.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">outro.coffee</span></a><a href="../src/presentation.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">presentation.coffee</span></a></div></div></div><table cellpadding="0" cellspacing="0"><thead><tr><th class="docs"><h1>component.coffee</h1><div class="filepath">src/</div></th><th class="code"></th></tr></thead><tbody><tr id="section-1"><td class="docs"><div class="pilwrap"><a href="#section-1" class="pilcrow">&#182;</a></div><h1>Components</h1>
+</td><td class="code"><div class="highlight"><pre><span class="nx">SGAReader</span><span class="p">.</span><span class="nx">namespace</span> <span class="s">&quot;Component&quot;</span><span class="p">,</span> <span class="nf">(Component) -&gt;</span></pre></div></td></tr><tr id="section-2"><td class="docs"><div class="pilwrap"><a href="#section-2" class="pilcrow">&#182;</a></div><h2>Component.ProgressBar</h2>
+</td><td class="code"><div class="highlight"><pre>  <span class="nx">Component</span><span class="p">.</span><span class="nx">namespace</span> <span class="s">&quot;ProgressBar&quot;</span><span class="p">,</span> <span class="nf">(ProgressBar) -&gt;</span></pre></div></td></tr><tr id="section-3"><td class="docs"><div class="pilwrap"><a href="#section-3" class="pilcrow">&#182;</a></div><p>This component manages the display of a progress bar based on
+the Twitter Bootstrap progress bar component.</p>
+
+<p>The component has two variables: Numerator and Denominator.</p>
+</td><td class="code"><div class="highlight"><pre>    <span class="nv">ProgressBar.initInstance = </span><span class="nf">(args...) -&gt;</span>
+      <span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">initInstance</span> <span class="s">&quot;SGA.Reader.Component.ProgressBar&quot;</span><span class="p">,</span> <span class="nx">args</span><span class="p">...,</span> <span class="nf">(that, container) -&gt;</span>
+
+        <span class="nx">that</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onNumeratorChange</span><span class="p">.</span><span class="nx">addListener</span> <span class="nf">(n) -&gt;</span>
+          <span class="nv">percent = </span><span class="nb">parseInt</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="nx">n</span> <span class="o">/</span> <span class="nx">that</span><span class="p">.</span><span class="nx">getDenominator</span><span class="p">(),</span> <span class="mi">10</span><span class="p">)</span>
+          <span class="nv">percent = </span><span class="mi">100</span> <span class="k">if</span> <span class="nx">percent</span> <span class="o">&gt;</span> <span class="mi">100</span>
+          <span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;.bar&quot;</span><span class="p">).</span><span class="nx">css</span><span class="p">(</span><span class="s">&quot;width&quot;</span><span class="p">,</span> <span class="nx">percent</span> <span class="o">+</span> <span class="s">&quot;%&quot;</span><span class="p">)</span>
+
+        <span class="nx">that</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onDenominatorChange</span><span class="p">.</span><span class="nx">addListener</span> <span class="nf">(d) -&gt;</span>
+          <span class="nv">percent = </span><span class="nb">parseInt</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="nx">that</span><span class="p">.</span><span class="nx">getNumerator</span><span class="p">()</span> <span class="o">/</span> <span class="nx">d</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+          <span class="nv">percent = </span><span class="mi">100</span> <span class="k">if</span> <span class="nx">percent</span> <span class="o">&gt;</span> <span class="mi">100</span>
+          <span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;.bar&quot;</span><span class="p">).</span><span class="nx">css</span><span class="p">(</span><span class="s">&quot;width&quot;</span><span class="p">,</span> <span class="nx">percent</span> <span class="o">+</span> <span class="s">&quot;%&quot;</span><span class="p">)</span>
+
+        <span class="nv">that.show = </span><span class="o">-&gt;</span> 
+          <span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">).</span><span class="nx">show</span><span class="p">()</span>
+
+        <span class="nv">that.hide = </span><span class="o">-&gt;</span> 
+          <span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">).</span><span class="nx">hide</span><span class="p">()</span></pre></div></td></tr><tr id="section-4"><td class="docs"><div class="pilwrap"><a href="#section-4" class="pilcrow">&#182;</a></div><h2>Component.SequenceSelector</h2>
+</td><td class="code"><div class="highlight"><pre>  <span class="nx">Component</span><span class="p">.</span><span class="nx">namespace</span> <span class="s">&quot;SequenceSelector&quot;</span><span class="p">,</span> <span class="nf">(SequenceSelector) -&gt;</span></pre></div></td></tr><tr id="section-5"><td class="docs"><div class="pilwrap"><a href="#section-5" class="pilcrow">&#182;</a></div><p>This component manages the options of a select HTML form element.</p>
+
+<p>The component has one variable: Sequence.</p>
+
+<p>The container should be a <select></select> element.</p>
+</td><td class="code"><div class="highlight"><pre>    <span class="nv">SequenceSelector.initInstance = </span><span class="nf">(args...) -&gt;</span>
+      <span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">Presentation</span><span class="p">.</span><span class="nx">initInstance</span> <span class="s">&quot;SGA.Reader.Component.SequenceSelector&quot;</span><span class="p">,</span> <span class="nx">args</span><span class="p">...,</span> <span class="nf">(that, container) -&gt;</span>
+        <span class="nv">options = </span><span class="nx">that</span><span class="p">.</span><span class="nx">options</span>
+        <span class="nx">that</span><span class="p">.</span><span class="nx">addLens</span> <span class="s">&#39;Sequence&#39;</span><span class="p">,</span> <span class="nf">(container, view, model, id) -&gt;</span>
+          <span class="nv">rendering = </span><span class="p">{}</span>
+          <span class="nv">item = </span><span class="nx">model</span><span class="p">.</span><span class="nx">getItem</span> <span class="nx">id</span>
+          <span class="nv">el = </span><span class="nx">$</span><span class="p">(</span><span class="s">&quot;&lt;option&gt;&lt;/option&gt;&quot;</span><span class="p">)</span>
+          <span class="nx">el</span><span class="p">.</span><span class="nx">attr</span>
+            <span class="nv">value: </span><span class="nx">id</span>
+          <span class="nx">el</span><span class="p">.</span><span class="nx">text</span> <span class="nx">item</span><span class="p">.</span><span class="nx">label</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+          <span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="nx">el</span><span class="p">)</span>
+
+        <span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">).</span><span class="nx">change</span> <span class="o">-&gt;</span>
+          <span class="nx">that</span><span class="p">.</span><span class="nx">setSequence</span> <span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
+
+        <span class="nx">that</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onSequenceChange</span><span class="p">.</span><span class="nx">addListener</span> <span class="nf">(v) -&gt;</span>
+          <span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span>
+
+        <span class="nv">that.finishDisplayUpdate = </span><span class="o">-&gt;</span>
+          <span class="nx">that</span><span class="p">.</span><span class="nx">setSequence</span> <span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span></pre></div></td></tr><tr id="section-6"><td class="docs"><div class="pilwrap"><a href="#section-6" class="pilcrow">&#182;</a></div><h2>Component.Slider</h2>
+</td><td class="code"><div class="highlight"><pre>  <span class="nx">Component</span><span class="p">.</span><span class="nx">namespace</span> <span class="s">&quot;Slider&quot;</span><span class="p">,</span> <span class="nf">(Slider) -&gt;</span></pre></div></td></tr><tr id="section-7"><td class="docs"><div class="pilwrap"><a href="#section-7" class="pilcrow">&#182;</a></div><p>This component manages an HTML5 slider input element.</p>
+
+<p>This component has three variables: Min, Max, and Value.</p>
+</td><td class="code"><div class="highlight"><pre>    <span class="nv">Slider.initInstance = </span><span class="nf">(args...) -&gt;</span>
+      <span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">initInstance</span> <span class="s">&quot;SGA.Reader.Component.Slider&quot;</span><span class="p">,</span> <span class="nx">args</span><span class="p">...,</span> <span class="nf">(that, container) -&gt;</span>
+        <span class="nx">that</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onMinChange</span><span class="p">.</span><span class="nx">addListener</span> <span class="nf">(n) -&gt;</span>
+          <span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">).</span><span class="nx">attr</span>
+            <span class="nv">min: </span><span class="nx">n</span>
+        <span class="nx">that</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onMaxChange</span><span class="p">.</span><span class="nx">addListener</span> <span class="nf">(n) -&gt;</span>
+          <span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">).</span><span class="nx">attr</span>
+            <span class="nv">max: </span><span class="nx">n</span>
+        <span class="nx">that</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onValueChange</span><span class="p">.</span><span class="nx">addListener</span> <span class="nf">(n) -&gt;</span> <span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span>
+        <span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">).</span><span class="nx">change</span> <span class="nf">(e) -&gt;</span> <span class="nx">that</span><span class="p">.</span><span class="nx">setValue</span> <span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span></pre></div></td></tr><tr id="section-8"><td class="docs"><div class="pilwrap"><a href="#section-8" class="pilcrow">&#182;</a></div><h2>Component.PagerControls</h2>
+</td><td class="code"><div class="highlight"><pre>  <span class="nx">Component</span><span class="p">.</span><span class="nx">namespace</span> <span class="s">&quot;PagerControls&quot;</span><span class="p">,</span> <span class="nf">(PagerControls) -&gt;</span></pre></div></td></tr><tr id="section-9"><td class="docs"><div class="pilwrap"><a href="#section-9" class="pilcrow">&#182;</a></div><p>This component manages a set of Twitter Bootstrap buttons that display
+the step forward, step backward, fast forward, and fast backward icons.</p>
+
+<p>This component has three variables: Min, Max, and Value.</p>
+</td><td class="code"><div class="highlight"><pre>    <span class="nv">PagerControls.initInstance = </span><span class="nf">(args...) -&gt;</span>
+      <span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">initInstance</span> <span class="s">&quot;SGA.Reader.Component.PagerControls&quot;</span><span class="p">,</span> <span class="nx">args</span><span class="p">...,</span> <span class="nf">(that, container) -&gt;</span>
+        <span class="nv">firstEl = </span><span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;.icon-fast-backward&quot;</span><span class="p">).</span><span class="nx">parent</span><span class="p">()</span>
+        <span class="nv">prevEl = </span><span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;.icon-step-backward&quot;</span><span class="p">).</span><span class="nx">parent</span><span class="p">()</span>
+        <span class="nv">nextEl = </span><span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;.icon-step-forward&quot;</span><span class="p">).</span><span class="nx">parent</span><span class="p">()</span>
+        <span class="nv">lastEl = </span><span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s">&quot;.icon-fast-forward&quot;</span><span class="p">).</span><span class="nx">parent</span><span class="p">()</span>
+
+        <span class="nx">that</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onMinChange</span><span class="p">.</span><span class="nx">addListener</span> <span class="nf">(n) -&gt;</span>
+          <span class="k">if</span> <span class="nx">n</span> <span class="o">&lt;</span> <span class="nx">that</span><span class="p">.</span><span class="nx">getValue</span><span class="p">()</span>
+            <span class="nx">firstEl</span><span class="p">.</span><span class="nx">removeClass</span> <span class="s">&quot;disabled&quot;</span>
+            <span class="nx">prevEl</span><span class="p">.</span><span class="nx">removeClass</span> <span class="s">&quot;disabled&quot;</span>
+          <span class="k">else</span>
+            <span class="nx">firstEl</span><span class="p">.</span><span class="nx">addClass</span> <span class="s">&quot;disabled&quot;</span>
+            <span class="nx">prevEl</span><span class="p">.</span><span class="nx">addClass</span> <span class="s">&quot;disabled&quot;</span>
+
+        <span class="nx">that</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onMaxChange</span><span class="p">.</span><span class="nx">addListener</span> <span class="nf">(n) -&gt;</span>
+          <span class="k">if</span> <span class="nx">n</span> <span class="o">&gt;</span> <span class="nx">that</span><span class="p">.</span><span class="nx">getValue</span><span class="p">()</span>
+            <span class="nx">nextEl</span><span class="p">.</span><span class="nx">removeClass</span> <span class="s">&quot;disabled&quot;</span>
+            <span class="nx">lastEl</span><span class="p">.</span><span class="nx">removeClass</span> <span class="s">&quot;disbaled&quot;</span>
+          <span class="k">else</span>
+            <span class="nx">nextEl</span><span class="p">.</span><span class="nx">addClass</span> <span class="s">&quot;disabled&quot;</span>
+            <span class="nx">lastEl</span><span class="p">.</span><span class="nx">addClass</span> <span class="s">&quot;disabled&quot;</span>
+
+        <span class="nx">that</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onValueChange</span><span class="p">.</span><span class="nx">addListener</span> <span class="nf">(n) -&gt;</span>
+          <span class="k">if</span> <span class="nx">n</span> <span class="o">&gt;</span> <span class="nx">that</span><span class="p">.</span><span class="nx">getMin</span><span class="p">()</span>
+            <span class="nx">firstEl</span><span class="p">.</span><span class="nx">removeClass</span> <span class="s">&quot;disabled&quot;</span>
+            <span class="nx">prevEl</span><span class="p">.</span><span class="nx">removeClass</span> <span class="s">&quot;disabled&quot;</span>
+          <span class="k">else</span>
+            <span class="nx">firstEl</span><span class="p">.</span><span class="nx">addClass</span> <span class="s">&quot;disabled&quot;</span>
+            <span class="nx">prevEl</span><span class="p">.</span><span class="nx">addClass</span> <span class="s">&quot;disabled&quot;</span>
+
+          <span class="k">if</span> <span class="nx">n</span> <span class="o">&lt;</span> <span class="nx">that</span><span class="p">.</span><span class="nx">getMax</span><span class="p">()</span>
+            <span class="nx">nextEl</span><span class="p">.</span><span class="nx">removeClass</span> <span class="s">&quot;disabled&quot;</span>
+            <span class="nx">lastEl</span><span class="p">.</span><span class="nx">removeClass</span> <span class="s">&quot;disabled&quot;</span>
+          <span class="k">else</span>
+            <span class="nx">nextEl</span><span class="p">.</span><span class="nx">addClass</span> <span class="s">&quot;disabled&quot;</span>
+            <span class="nx">lastEl</span><span class="p">.</span><span class="nx">addClass</span> <span class="s">&quot;disabled&quot;</span>
+
+        <span class="nx">$</span><span class="p">(</span><span class="nx">prevEl</span><span class="p">).</span><span class="nx">click</span> <span class="nf">(e) -&gt;</span>
+          <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
+          <span class="nx">that</span><span class="p">.</span><span class="nx">addValue</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="nx">$</span><span class="p">(</span><span class="nx">nextEl</span><span class="p">).</span><span class="nx">click</span> <span class="nf">(e) -&gt;</span>
+          <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
+          <span class="nx">that</span><span class="p">.</span><span class="nx">addValue</span> <span class="mi">1</span>
+        <span class="nx">$</span><span class="p">(</span><span class="nx">firstEl</span><span class="p">).</span><span class="nx">click</span> <span class="nf">(e) -&gt;</span>
+          <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
+          <span class="nx">that</span><span class="p">.</span><span class="nx">setValue</span> <span class="nx">that</span><span class="p">.</span><span class="nx">getMin</span><span class="p">()</span>
+        <span class="nx">$</span><span class="p">(</span><span class="nx">lastEl</span><span class="p">).</span><span class="nx">click</span> <span class="nf">(e) -&gt;</span>
+          <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
+          <span class="nx">that</span><span class="p">.</span><span class="nx">setValue</span> <span class="nx">that</span><span class="p">.</span><span class="nx">getMax</span><span class="p">()</span>
+
+</pre></div></td></tr></tbody></table><div id="generated">generated Mon Jan 07 2013 15:18:16 GMT-0500 (EST)  </div><div id="projectname"><a href="../index.html">SGA Shared Canvas Viewer</a></div></div>

@@ -1,0 +1,75 @@
+---
+layout: docco
+title: sga/code/shared-canvas/src/outro.coffee.html
+---
+<div id="container"><div id="background"></div><div id="jump_to">Jump To &hellip;<div id="jump_wrapper"><div id="jump_page"><a href="../index.html" class="source"><span class="file_name">README</span></a><a href="../src/application.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">application.coffee</span></a><a href="../src/component.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">component.coffee</span></a><a href="../src/controller.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">controller.coffee</span></a><a href="../src/core.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">core.coffee</span></a><a href="../src/data.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">data.coffee</span></a><a href="../src/intro.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">intro.coffee</span></a><a href="../src/outro.coffee.html" class="source selected"><span class="base_path">src / </span><span class="file_name">outro.coffee</span></a><a href="../src/presentation.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">presentation.coffee</span></a></div></div></div><table cellpadding="0" cellspacing="0"><thead><tr><th class="docs"><h1>outro.coffee</h1><div class="filepath">src/</div></th><th class="code"></th></tr></thead><tbody><tr id="section-1"><td class="docs"><div class="pilwrap"><a href="#section-1" class="pilcrow">&#182;</a></div>
+</td><td class="code"><div class="highlight"><pre><span class="p">)(</span><span class="nx">jQuery</span><span class="p">,</span> <span class="nx">MITHGrid</span><span class="p">)</span></pre></div></td></tr><tr id="section-2"><td class="docs"><div class="pilwrap"><a href="#section-2" class="pilcrow">&#182;</a></div><p>The Application.SharedCanvas object ties together all of the information
+about our view of the manifest, from available sequences and annotations
+to where we are in which sequence. The application object coordinates all
+of the components and presentations concerned with a particular manifest.</p>
+
+<p>The app.dataViews.canvasAnnotations data view will always contain a list
+of annotations directly targeting the current canvas.</p>
+</td><td class="code"><div class="highlight"><pre><span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">defaults</span> <span class="s">&#39;SGA.Reader.Application.SharedCanvas&#39;</span><span class="p">,</span>
+  <span class="nv">dataStores:</span>
+    <span class="nv">data:</span>
+      <span class="nv">types:</span>
+        <span class="nv">Sequence: </span><span class="p">{}</span>
+        <span class="nv">Canvas: </span><span class="p">{}</span>
+      <span class="nv">properties:</span>
+        <span class="nv">target:</span>
+          <span class="nv">valueType: </span><span class="s">&#39;item&#39;</span>
+  <span class="nv">dataViews:</span>
+    <span class="nv">canvasAnnotations:</span>
+      <span class="nv">dataStore: </span><span class="s">&#39;data&#39;</span>
+      <span class="nv">type: </span><span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">Data</span><span class="p">.</span><span class="nx">SubSet</span>
+      <span class="nv">expressions: </span><span class="p">[</span> <span class="s">&#39;!target&#39;</span> <span class="p">]</span>
+    <span class="nv">sequences:</span>
+      <span class="nv">dataStore: </span><span class="s">&#39;data&#39;</span>
+      <span class="nv">types: </span><span class="p">[</span> <span class="s">&#39;Sequence&#39;</span> <span class="p">]</span>
+  <span class="nv">variables:</span>
+    <span class="nv">Canvas: </span>  <span class="p">{</span> <span class="o">is:</span> <span class="s">&#39;rw&#39;</span> <span class="p">}</span>
+    <span class="nv">Sequence: </span><span class="p">{</span> <span class="o">is:</span> <span class="s">&#39;rw&#39;</span> <span class="p">}</span>
+    <span class="nv">Position: </span><span class="p">{</span> <span class="o">is:</span> <span class="s">&#39;lrw&#39;</span><span class="p">,</span> <span class="nv">isa: </span><span class="s">&#39;numeric&#39;</span> <span class="p">}</span></pre></div></td></tr><tr id="section-3"><td class="docs"><div class="pilwrap"><a href="#section-3" class="pilcrow">&#182;</a></div><p>The Slider and PagerControls have the same variables so that they can be
+used interchangably.</p>
+</td><td class="code"><div class="highlight"><pre><span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">defaults</span> <span class="s">&#39;SGA.Reader.Component.Slider&#39;</span><span class="p">,</span>
+  <span class="nv">variables:</span>
+    <span class="nv">Min: </span>  <span class="p">{</span> <span class="o">is:</span> <span class="s">&#39;rw&#39;</span><span class="p">,</span> <span class="nv">isa: </span><span class="s">&#39;numeric&#39;</span> <span class="p">}</span>
+    <span class="nv">Max: </span>  <span class="p">{</span> <span class="o">is:</span> <span class="s">&#39;rw&#39;</span><span class="p">,</span> <span class="nv">isa: </span><span class="s">&#39;numeric&#39;</span> <span class="p">}</span>
+    <span class="nv">Value: </span><span class="p">{</span> <span class="o">is:</span> <span class="s">&#39;rw&#39;</span><span class="p">,</span> <span class="nv">isa: </span><span class="s">&#39;numeric&#39;</span> <span class="p">}</span>
+
+<span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">defaults</span> <span class="s">&#39;SGA.Reader.Component.PagerControls&#39;</span><span class="p">,</span>
+  <span class="nv">variables:</span>
+    <span class="nv">Min: </span>  <span class="p">{</span> <span class="o">is:</span> <span class="s">&#39;rw&#39;</span><span class="p">,</span> <span class="nv">isa: </span><span class="s">&#39;numeric&#39;</span> <span class="p">}</span>
+    <span class="nv">Max: </span>  <span class="p">{</span> <span class="o">is:</span> <span class="s">&#39;rw&#39;</span><span class="p">,</span> <span class="nv">isa: </span><span class="s">&#39;numeric&#39;</span> <span class="p">}</span>
+    <span class="nv">Value: </span><span class="p">{</span> <span class="o">is:</span> <span class="s">&#39;rw&#39;</span><span class="p">,</span> <span class="nv">isa: </span><span class="s">&#39;numeric&#39;</span> <span class="p">}</span>
+
+<span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">defaults</span> <span class="s">&#39;SGA.Reader.Component.SequenceSelector&#39;</span><span class="p">,</span>
+  <span class="nv">variables:</span>
+    <span class="nv">Sequence: </span><span class="p">{</span> <span class="o">is:</span> <span class="s">&#39;rw&#39;</span> <span class="p">}</span></pre></div></td></tr><tr id="section-4"><td class="docs"><div class="pilwrap"><a href="#section-4" class="pilcrow">&#182;</a></div><p>We put the view setup here so that we don't have to remember how to
+arrange the Twitter Bootstrap HTML each time. This is looking forward
+to when this is a component outside SGA.</p>
+</td><td class="code"><div class="highlight"><pre><span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">defaults</span> <span class="s">&#39;SGA.Reader.Component.ProgressBar&#39;</span><span class="p">,</span>
+  <span class="nv">variables:</span>
+    <span class="nv">Numerator: </span>  <span class="p">{</span> <span class="o">is:</span> <span class="s">&#39;rw&#39;</span><span class="p">,</span> <span class="nv">default: </span><span class="mi">0</span><span class="p">,</span> <span class="nv">isa: </span><span class="s">&#39;numeric&#39;</span> <span class="p">}</span>
+    <span class="nv">Denominator: </span><span class="p">{</span> <span class="o">is:</span> <span class="s">&#39;rw&#39;</span><span class="p">,</span> <span class="nv">default: </span><span class="mi">1</span><span class="p">,</span> <span class="nv">isa: </span><span class="s">&#39;numeric&#39;</span> <span class="p">}</span>
+  <span class="nv">viewSetup: </span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">    &lt;div class=&quot;progress progress-striped active&quot;&gt;</span>
+<span class="s">      &lt;div class=&quot;bar&quot; style=&quot;width: 0%;&quot;&gt;&lt;/div&gt;</span>
+<span class="s">    &lt;/div&gt;</span>
+<span class="s">  &quot;&quot;&quot;</span></pre></div></td></tr><tr id="section-5"><td class="docs"><div class="pilwrap"><a href="#section-5" class="pilcrow">&#182;</a></div><p>We use the Canvas presentation as the root surface for displaying the
+annotations. Thus, we keep track of which canvas we're looking at.
+The Scale variable will be used to manage zooming.</p>
+
+<p>TODO: Have variables for panning across the canvas.</p>
+</td><td class="code"><div class="highlight"><pre><span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">defaults</span> <span class="s">&#39;SGA.Reader.Presentation.Canvas&#39;</span><span class="p">,</span>
+  <span class="nv">variables:</span>
+    <span class="nv">Canvas: </span><span class="p">{</span> <span class="o">is:</span> <span class="s">&#39;rw&#39;</span> <span class="p">}</span>
+    <span class="nv">Scale: </span> <span class="p">{</span> <span class="o">is:</span> <span class="s">&#39;rw&#39;</span><span class="p">,</span> <span class="nv">isa: </span><span class="s">&#39;numeric&#39;</span> <span class="p">}</span></pre></div></td></tr><tr id="section-6"><td class="docs"><div class="pilwrap"><a href="#section-6" class="pilcrow">&#182;</a></div><p>The ItemsToProcess and ItemsProcessed are analagous to the
+Numerator and Denominator of the ProgressBar component.</p>
+</td><td class="code"><div class="highlight"><pre><span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">defaults</span> <span class="s">&#39;SGA.Reader.Data.Manifest&#39;</span><span class="p">,</span>
+  <span class="nv">variables:</span>
+    <span class="nv">ItemsToProcess: </span><span class="p">{</span> <span class="o">is:</span> <span class="s">&#39;rw&#39;</span><span class="p">,</span> <span class="nv">default: </span><span class="mi">0</span><span class="p">,</span> <span class="nv">isa: </span><span class="s">&#39;numeric&#39;</span> <span class="p">}</span>
+    <span class="nv">ItemsProcessed: </span><span class="p">{</span> <span class="o">is:</span> <span class="s">&#39;rw&#39;</span><span class="p">,</span> <span class="nv">default: </span><span class="mi">0</span><span class="p">,</span> <span class="nv">isa: </span><span class="s">&#39;numeric&#39;</span> <span class="p">}</span>
+
+</pre></div></td></tr></tbody></table><div id="generated">generated Mon Jan 07 2013 15:18:18 GMT-0500 (EST)  </div><div id="projectname"><a href="../index.html">SGA Shared Canvas Viewer</a></div></div>

@@ -1,0 +1,283 @@
+---
+layout: docco
+title: sga/code/shared-canvas/src/presentation.coffee.html
+---
+<div id="container"><div id="background"></div><div id="jump_to">Jump To &hellip;<div id="jump_wrapper"><div id="jump_page"><a href="../index.html" class="source"><span class="file_name">README</span></a><a href="../src/application.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">application.coffee</span></a><a href="../src/component.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">component.coffee</span></a><a href="../src/controller.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">controller.coffee</span></a><a href="../src/core.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">core.coffee</span></a><a href="../src/data.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">data.coffee</span></a><a href="../src/intro.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">intro.coffee</span></a><a href="../src/outro.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">outro.coffee</span></a><a href="../src/presentation.coffee.html" class="source selected"><span class="base_path">src / </span><span class="file_name">presentation.coffee</span></a></div></div></div><table cellpadding="0" cellspacing="0"><thead><tr><th class="docs"><h1>presentation.coffee</h1><div class="filepath">src/</div></th><th class="code"></th></tr></thead><tbody><tr id="section-1"><td class="docs"><div class="pilwrap"><a href="#section-1" class="pilcrow">&#182;</a></div><h1>Presentations</h1>
+</td><td class="code"><div class="highlight"><pre><span class="nx">SGAReader</span><span class="p">.</span><span class="nx">namespace</span> <span class="s">&quot;Presentation&quot;</span><span class="p">,</span> <span class="nf">(Presentation) -&gt;</span></pre></div></td></tr><tr id="section-2"><td class="docs"><div class="pilwrap"><a href="#section-2" class="pilcrow">&#182;</a></div><h2>Presentation.TextContent</h2>
+</td><td class="code"><div class="highlight"><pre></pre></div></td></tr><tr id="section-3"><td class="docs"><div class="pilwrap"><a href="#section-3" class="pilcrow">&#182;</a></div><p>The TextContent presentation is all about modeling a section of a canvas
+as a textual zone instead of a pixel-based zone. Eventually, we may want
+to allow addressing of lines and character offsets, but for now we simply
+fill in the area with textual annotations in the dataView.</p>
+</td><td class="code"><div class="highlight"><pre>  <span class="nx">Presentation</span><span class="p">.</span><span class="nx">namespace</span> <span class="s">&quot;TextContent&quot;</span><span class="p">,</span> <span class="nf">(TextContent) -&gt;</span>
+    <span class="nv">TextContent.initInstance = </span><span class="nf">(args...) -&gt;</span>
+      <span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">Presentation</span><span class="p">.</span><span class="nx">initInstance</span> <span class="s">&quot;SGA.Reader.Presentation.TextContent&quot;</span><span class="p">,</span> <span class="nx">args</span><span class="p">...,</span> <span class="nf">(that, container) -&gt;</span>
+        <span class="nv">options = </span><span class="nx">that</span><span class="p">.</span><span class="nx">options</span></pre></div></td></tr><tr id="section-4"><td class="docs"><div class="pilwrap"><a href="#section-4" class="pilcrow">&#182;</a></div><p>We draw each text span type the same way. We rely on the
+item.type to give us the CSS classes we need for the span</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nv">annoLens = </span><span class="nf">(container, view, model, id) -&gt;</span>
+          <span class="nv">rendering = </span><span class="p">{}</span>
+          <span class="nv">el = </span><span class="nx">$</span><span class="p">(</span><span class="s">&quot;&lt;span&gt;&lt;/span&gt;&quot;</span><span class="p">)</span>
+          <span class="nx">rendering</span><span class="p">.</span><span class="nv">$el = </span><span class="nx">el</span>
+          <span class="nv">item = </span><span class="nx">model</span><span class="p">.</span><span class="nx">getItem</span> <span class="nx">id</span>
+          <span class="nx">el</span><span class="p">.</span><span class="nx">text</span> <span class="nx">item</span><span class="p">.</span><span class="nx">text</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+          <span class="nx">el</span><span class="p">.</span><span class="nx">addClass</span> <span class="nx">item</span><span class="p">.</span><span class="nx">type</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">)</span>
+          <span class="nx">el</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&quot;style&quot;</span><span class="p">,</span> <span class="nx">item</span><span class="p">.</span><span class="nx">css</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+          <span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">).</span><span class="nx">append</span> <span class="nx">el</span>
+          <span class="nv">rendering.remove = </span><span class="o">-&gt;</span>
+            <span class="nx">el</span><span class="p">.</span><span class="nx">remove</span><span class="p">()</span>
+          <span class="nv">rendering.update = </span><span class="nf">(item) -&gt;</span>
+            <span class="nx">el</span><span class="p">.</span><span class="nx">text</span> <span class="nx">item</span><span class="p">.</span><span class="nx">text</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+          <span class="nx">rendering</span></pre></div></td></tr><tr id="section-5"><td class="docs"><div class="pilwrap"><a href="#section-5" class="pilcrow">&#182;</a></div><p>We expect an HTML container for this to which we can append
+all of the text content pieces that belong to this container.
+For now, we are dependent on the data store to retain the ordering
+of items based on insertion order. Eventually, we'll build
+item ordering into the basic MITHGrid presentation code. Then, we
+can set </p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nx">that</span><span class="p">.</span><span class="nx">addLens</span> <span class="s">&#39;AdditionAnnotation&#39;</span><span class="p">,</span> <span class="nx">annoLens</span>
+        <span class="nx">that</span><span class="p">.</span><span class="nx">addLens</span> <span class="s">&#39;DeletionAnnotation&#39;</span><span class="p">,</span> <span class="nx">annoLens</span>
+        <span class="nx">that</span><span class="p">.</span><span class="nx">addLens</span> <span class="s">&#39;LineAnnotation&#39;</span><span class="p">,</span> <span class="nx">annoLens</span>
+        <span class="nx">that</span><span class="p">.</span><span class="nx">addLens</span> <span class="s">&#39;Text&#39;</span><span class="p">,</span> <span class="nx">annoLens</span></pre></div></td></tr><tr id="section-6"><td class="docs"><div class="pilwrap"><a href="#section-6" class="pilcrow">&#182;</a></div><p>Line breaks are different. We just want to add an explicit
+break without any classes or styling.</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nx">that</span><span class="p">.</span><span class="nx">addLens</span> <span class="s">&#39;LineBreak&#39;</span><span class="p">,</span> <span class="nf">(container, view, model, id) -&gt;</span>
+          <span class="nv">rendering = </span><span class="p">{}</span>
+          <span class="nv">el = </span><span class="nx">$</span><span class="p">(</span><span class="s">&quot;&lt;br/&gt;&quot;</span><span class="p">)</span>
+          <span class="nx">rendering</span><span class="p">.</span><span class="nv">$el = </span><span class="nx">el</span>
+          <span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="nx">el</span><span class="p">)</span>
+
+          <span class="nv">rendering.remove = </span><span class="o">-&gt;</span> <span class="nx">el</span><span class="p">.</span><span class="nx">remove</span><span class="p">()</span>
+          <span class="nv">rendering.update = </span><span class="nf">(item) -&gt;</span>
+
+          <span class="nx">rendering</span></pre></div></td></tr><tr id="section-7"><td class="docs"><div class="pilwrap"><a href="#section-7" class="pilcrow">&#182;</a></div><h2>Presentation.Zone</h2>
+</td><td class="code"><div class="highlight"><pre></pre></div></td></tr><tr id="section-8"><td class="docs"><div class="pilwrap"><a href="#section-8" class="pilcrow">&#182;</a></div><p>The Zone presentation handles mapping annotations onto an SVG
+surface. A Canvas is just a special zone that covers the entire canvas.</p>
+
+<p>We expect container to be in the SVG image.</p>
+</td><td class="code"><div class="highlight"><pre>  <span class="nx">Presentation</span><span class="p">.</span><span class="nx">namespace</span> <span class="s">&quot;Zone&quot;</span><span class="p">,</span> <span class="nf">(Zone) -&gt;</span>
+    <span class="nv">Zone.initInstance = </span><span class="nf">(args...) -&gt;</span>
+      <span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">Presentation</span><span class="p">.</span><span class="nx">initInstance</span> <span class="s">&quot;SGA.Reader.Presentation.Zone&quot;</span><span class="p">,</span> <span class="nx">args</span><span class="p">...,</span> <span class="nf">(that, container) -&gt;</span>
+        <span class="nv">options = </span><span class="nx">that</span><span class="p">.</span><span class="nx">options</span>
+        <span class="nv">svgRoot = </span><span class="nx">options</span><span class="p">.</span><span class="nx">svgRoot</span></pre></div></td></tr><tr id="section-9"><td class="docs"><div class="pilwrap"><a href="#section-9" class="pilcrow">&#182;</a></div><p>!target gives us all of the annotations that target the given
+item id. We use this later to find all of the annotations that target
+a given zone.</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nv">annoExpr = </span><span class="nx">that</span><span class="p">.</span><span class="nx">dataView</span><span class="p">.</span><span class="nx">prepare</span><span class="p">([</span><span class="s">&#39;!target&#39;</span><span class="p">])</span></pre></div></td></tr><tr id="section-10"><td class="docs"><div class="pilwrap"><a href="#section-10" class="pilcrow">&#182;</a></div><p>Since images don't have annotations attached to them, we simply
+do nothing if our presentation root isn't marked as including
+images.</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nx">that</span><span class="p">.</span><span class="nx">addLens</span> <span class="s">&#39;Image&#39;</span><span class="p">,</span> <span class="nf">(container, view, model, id) -&gt;</span>
+          <span class="k">return</span> <span class="nx">unless</span> <span class="s">&#39;Image&#39;</span> <span class="k">in</span> <span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">types</span> <span class="o">||</span> <span class="p">[])</span>
+          <span class="nv">rendering = </span><span class="p">{}</span>
+
+          <span class="nv">item = </span><span class="nx">model</span><span class="p">.</span><span class="nx">getItem</span> <span class="nx">id</span>
+
+          <span class="nv">svgImage = </span><span class="kc">null</span>
+          <span class="nv">renderImage = </span><span class="nf">(item) -&gt;</span>
+            <span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">image</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">?</span> <span class="o">and</span> <span class="nx">svgRoot</span><span class="o">?</span>
+              <span class="nv">x = </span><span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">x</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">?</span> <span class="k">then</span> <span class="nx">item</span><span class="p">.</span><span class="nx">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+              <span class="nv">y = </span><span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">y</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">?</span> <span class="k">then</span> <span class="nx">item</span><span class="p">.</span><span class="nx">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+              <span class="nv">width = </span><span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">width</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">?</span> <span class="k">then</span> <span class="nx">item</span><span class="p">.</span><span class="nx">width</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="nx">options</span><span class="p">.</span><span class="nx">width</span> <span class="o">-</span> <span class="nx">x</span>
+              <span class="nv">height = </span><span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">height</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">?</span> <span class="k">then</span> <span class="nx">item</span><span class="p">.</span><span class="nx">height</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="nx">options</span><span class="p">.</span><span class="nx">height</span> <span class="o">-</span> <span class="nx">y</span>
+              <span class="k">if</span> <span class="nx">svgImage</span><span class="o">?</span>
+                <span class="nx">svgRoot</span><span class="p">.</span><span class="nx">remove</span> <span class="nx">svgImage</span>
+              <span class="nv">svgImage = </span><span class="nx">svgRoot</span><span class="p">.</span><span class="nx">image</span><span class="p">(</span><span class="nx">container</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">width</span><span class="p">,</span> <span class="nx">height</span><span class="p">,</span> <span class="nx">item</span><span class="p">.</span><span class="nx">image</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">{</span>
+                <span class="nv">preserveAspectRatio: </span><span class="s">&#39;none&#39;</span>
+              <span class="p">})</span>
+
+          <span class="nx">renderImage</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span>
+
+          <span class="nv">rendering.update = </span><span class="nx">renderImage</span>
+
+          <span class="nv">rendering.remove = </span><span class="o">-&gt;</span>
+            <span class="k">if</span> <span class="nx">svgImage</span><span class="o">?</span> <span class="o">and</span> <span class="nx">svgRoot</span><span class="o">?</span>
+              <span class="nx">svgRoot</span><span class="p">.</span><span class="nx">remove</span> <span class="nx">svgImage</span>
+          <span class="nx">rendering</span></pre></div></td></tr><tr id="section-11"><td class="docs"><div class="pilwrap"><a href="#section-11" class="pilcrow">&#182;</a></div><p>ZoneAnnotations just map a zone onto a zone or canvas. We render
+these regardless of what kinds of annotations we are displaying
+since we might eventually get to an annotation we want to display.</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nx">that</span><span class="p">.</span><span class="nx">addLens</span> <span class="s">&#39;ZoneAnnotation&#39;</span><span class="p">,</span> <span class="nf">(container, view, model, id) -&gt;</span>
+          <span class="nv">rendering = </span><span class="p">{}</span>
+
+          <span class="nv">zoneInfo = </span><span class="nx">model</span><span class="p">.</span><span class="nx">getItem</span> <span class="nx">id</span>
+          <span class="nv">zoneContainer = </span><span class="kc">null</span>
+          <span class="nv">zoneContainer = </span><span class="nb">document</span><span class="p">.</span><span class="nx">createElementNS</span><span class="p">(</span><span class="s">&#39;http://www.w3.org/2000/svg&#39;</span><span class="p">,</span> <span class="s">&#39;svg&#39;</span> <span class="p">)</span></pre></div></td></tr><tr id="section-12"><td class="docs"><div class="pilwrap"><a href="#section-12" class="pilcrow">&#182;</a></div><p>pull start/end/width/height from constraint with a default of
+the full surface</p>
+</td><td class="code"><div class="highlight"><pre>          <span class="nv">x = </span><span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">x</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">?</span> <span class="k">then</span> <span class="nx">item</span><span class="p">.</span><span class="nx">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+          <span class="nv">y = </span><span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">y</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">?</span> <span class="k">then</span> <span class="nx">item</span><span class="p">.</span><span class="nx">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+          <span class="nv">width = </span><span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">width</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">?</span> <span class="k">then</span> <span class="nx">item</span><span class="p">.</span><span class="nx">width</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="nx">options</span><span class="p">.</span><span class="nx">width</span> <span class="o">-</span> <span class="nx">x</span>
+          <span class="nv">height = </span><span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">height</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">?</span> <span class="k">then</span> <span class="nx">item</span><span class="p">.</span><span class="nx">height</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="nx">options</span><span class="p">.</span><span class="nx">height</span> <span class="o">-</span> <span class="nx">y</span>
+          <span class="nx">$</span><span class="p">(</span><span class="nx">zoneContainer</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&quot;x&quot;</span><span class="p">,</span> <span class="nx">x</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&quot;y&quot;</span><span class="p">,</span> <span class="nx">y</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&quot;width&quot;</span><span class="p">,</span> <span class="nx">width</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">,</span> <span class="nx">height</span><span class="p">)</span>
+          <span class="nx">container</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">zoneContainer</span><span class="p">)</span></pre></div></td></tr><tr id="section-13"><td class="docs"><div class="pilwrap"><a href="#section-13" class="pilcrow">&#182;</a></div><p>TODO: position/size zoneContainer and set scaling.</p>
+</td><td class="code"><div class="highlight"><pre>          <span class="nv">zoneDataView = </span><span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">Data</span><span class="p">.</span><span class="nx">SubSet</span><span class="p">.</span><span class="nx">initInstance</span>
+            <span class="nv">dataStore: </span><span class="nx">model</span>
+            <span class="nv">expressions: </span><span class="p">[</span> <span class="s">&#39;!target&#39;</span> <span class="p">]</span></pre></div></td></tr><tr id="section-14"><td class="docs"><div class="pilwrap"><a href="#section-14" class="pilcrow">&#182;</a></div><p>key: id</p>
+</td><td class="code"><div class="highlight"><pre>          <span class="nv">zone = </span><span class="nx">Zone</span><span class="p">.</span><span class="nx">initInstance</span> <span class="nx">zoneContainer</span><span class="p">,</span>
+            <span class="nv">types: </span><span class="nx">options</span><span class="p">.</span><span class="nx">types</span>
+            <span class="nv">dataView: </span><span class="nx">zoneDataView</span>
+            <span class="nv">svgRoot: </span><span class="nx">svgRoot</span>
+            <span class="nv">application: </span><span class="nx">options</span><span class="p">.</span><span class="nx">application</span>
+            <span class="nv">heigth: </span><span class="nx">height</span>
+            <span class="nv">width: </span><span class="nx">width</span>
+
+          <span class="nx">zoneDataView</span><span class="p">.</span><span class="nx">setKey</span> <span class="nx">id</span>
+
+          <span class="nv">rendering._destroy = </span><span class="o">-&gt;</span>
+            <span class="nx">zone</span><span class="p">.</span><span class="nx">_destroy</span><span class="p">()</span> <span class="k">if</span> <span class="nx">zone</span><span class="p">.</span><span class="nx">_destroy</span><span class="o">?</span>
+            <span class="nx">zoneDataView</span><span class="p">.</span><span class="nx">_destroy</span><span class="p">()</span> <span class="k">if</span> <span class="nx">zoneDataView</span><span class="p">.</span><span class="nx">_destroy</span><span class="o">?</span>
+
+          <span class="nv">rendering.remove = </span><span class="o">-&gt;</span>
+            <span class="nx">rendering</span><span class="p">.</span><span class="nx">_destroy</span><span class="p">()</span>
+ 
+          <span class="nv">rendering.update = </span><span class="nf">(item) -&gt;</span>
+            <span class="nv">x = </span><span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">x</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">?</span> <span class="k">then</span> <span class="nx">item</span><span class="p">.</span><span class="nx">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="nv">y = </span><span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">y</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">?</span> <span class="k">then</span> <span class="nx">item</span><span class="p">.</span><span class="nx">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="nv">width = </span><span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">width</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">?</span> <span class="k">then</span> <span class="nx">item</span><span class="p">.</span><span class="nx">width</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="nx">options</span><span class="p">.</span><span class="nx">width</span> <span class="o">-</span> <span class="nx">x</span>
+            <span class="nv">height = </span><span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">height</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">?</span> <span class="k">then</span> <span class="nx">item</span><span class="p">.</span><span class="nx">height</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="nx">options</span><span class="p">.</span><span class="nx">height</span> <span class="o">-</span> <span class="nx">y</span>
+            <span class="nx">$</span><span class="p">(</span><span class="nx">zoneContainer</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&quot;x&quot;</span><span class="p">,</span> <span class="nx">x</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&quot;y&quot;</span><span class="p">,</span> <span class="nx">y</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&quot;width&quot;</span><span class="p">,</span> <span class="nx">width</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">,</span> <span class="nx">height</span><span class="p">)</span>
+ 
+          <span class="nx">rendering</span></pre></div></td></tr><tr id="section-15"><td class="docs"><div class="pilwrap"><a href="#section-15" class="pilcrow">&#182;</a></div><p>We're rendering text content from here on down, so if we aren't
+rendering text for this view, then we shouldn't do anything here.</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nx">that</span><span class="p">.</span><span class="nx">addLens</span> <span class="s">&#39;TextContent&#39;</span><span class="p">,</span> <span class="nf">(container, view, model, id) -&gt;</span>
+          <span class="k">return</span> <span class="nx">unless</span> <span class="s">&#39;Text&#39;</span> <span class="k">in</span> <span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">types</span> <span class="o">||</span> <span class="p">[])</span>
+
+          <span class="nv">rendering = </span><span class="p">{}</span>
+          <span class="nv">app = </span><span class="nx">options</span><span class="p">.</span><span class="nx">application</span><span class="p">()</span>
+          <span class="nv">item = </span><span class="nx">model</span><span class="p">.</span><span class="nx">getItem</span> <span class="nx">id</span>
+ 
+          <span class="nv">textContainer = </span><span class="kc">null</span>
+          <span class="nv">textContainer = </span><span class="nb">document</span><span class="p">.</span><span class="nx">createElementNS</span><span class="p">(</span><span class="s">&#39;http://www.w3.org/2000/svg&#39;</span><span class="p">,</span> <span class="s">&#39;foreignObject&#39;</span> <span class="p">)</span>
+
+          <span class="nv">x = </span><span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">x</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">?</span> <span class="k">then</span> <span class="nx">item</span><span class="p">.</span><span class="nx">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+          <span class="nv">y = </span><span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">y</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">?</span> <span class="k">then</span> <span class="nx">item</span><span class="p">.</span><span class="nx">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+          <span class="nv">width = </span><span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">width</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">?</span> <span class="k">then</span> <span class="nx">item</span><span class="p">.</span><span class="nx">width</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="nx">options</span><span class="p">.</span><span class="nx">width</span> <span class="o">-</span> <span class="nx">x</span>
+          <span class="nv">height = </span><span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">height</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">?</span> <span class="k">then</span> <span class="nx">item</span><span class="p">.</span><span class="nx">height</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="nx">options</span><span class="p">.</span><span class="nx">height</span> <span class="o">-</span> <span class="nx">y</span>
+          <span class="nx">$</span><span class="p">(</span><span class="nx">textContainer</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&quot;x&quot;</span><span class="p">,</span> <span class="nx">x</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&quot;y&quot;</span><span class="p">,</span> <span class="nx">y</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&quot;width&quot;</span><span class="p">,</span> <span class="nx">width</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">,</span> <span class="nx">height</span><span class="p">)</span>
+          <span class="nx">container</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">textContainer</span><span class="p">)</span>
+
+          <span class="nv">bodyEl = </span><span class="nb">document</span><span class="p">.</span><span class="nx">createElementNS</span><span class="p">(</span><span class="s">&#39;http://www.w3.org/1999/xhtml&#39;</span><span class="p">,</span> <span class="s">&#39;body&#39;</span><span class="p">)</span>
+          <span class="nv">rootEl = </span><span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s">&#39;div&#39;</span><span class="p">)</span>
+          <span class="nx">$</span><span class="p">(</span><span class="nx">rootEl</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s">&quot;text-content&quot;</span><span class="p">)</span>
+          <span class="nx">$</span><span class="p">(</span><span class="nx">rootEl</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span> <span class="nx">id</span><span class="p">)</span>
+          <span class="nx">$</span><span class="p">(</span><span class="nx">rootEl</span><span class="p">).</span><span class="nx">css</span><span class="p">(</span><span class="s">&quot;font-size&quot;</span><span class="p">,</span> <span class="mi">150</span><span class="p">)</span>
+          <span class="nx">$</span><span class="p">(</span><span class="nx">rootEl</span><span class="p">).</span><span class="nx">css</span><span class="p">(</span><span class="s">&quot;line-height&quot;</span><span class="p">,</span> <span class="mf">1.15</span><span class="p">)</span>
+          <span class="nx">bodyEl</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">rootEl</span><span class="p">)</span>
+          <span class="nx">textContainer</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">bodyEl</span><span class="p">)</span></pre></div></td></tr><tr id="section-16"><td class="docs"><div class="pilwrap"><a href="#section-16" class="pilcrow">&#182;</a></div><p>textDataView gives us all of the annotations targeting this
+text content annotation - that is, all of the highlights and such
+that change how we render the text mapped onto the zone/canvas.
+We don't set the key here because the SubSet data view won't use
+the key to filter the set of annotations during the initInstance
+call.</p>
+</td><td class="code"><div class="highlight"><pre>          <span class="nv">textDataView = </span><span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">Data</span><span class="p">.</span><span class="nx">SubSet</span><span class="p">.</span><span class="nx">initInstance</span>
+            <span class="nv">dataStore: </span><span class="nx">model</span>
+            <span class="nv">expressions: </span><span class="p">[</span> <span class="s">&#39;!target&#39;</span> <span class="p">]</span></pre></div></td></tr><tr id="section-17"><td class="docs"><div class="pilwrap"><a href="#section-17" class="pilcrow">&#182;</a></div><p>Here we embed the text-based zone within the pixel-based
+zone. Any text-based positioning will have to be handled by
+the TextContent presentation.</p>
+</td><td class="code"><div class="highlight"><pre>          <span class="nv">text = </span><span class="nx">Presentation</span><span class="p">.</span><span class="nx">TextContent</span><span class="p">.</span><span class="nx">initInstance</span> <span class="nx">rootEl</span><span class="p">,</span>
+            <span class="nv">types: </span><span class="nx">options</span><span class="p">.</span><span class="nx">types</span>
+            <span class="nv">dataView: </span><span class="nx">textDataView</span>
+            <span class="nv">svgRoot: </span><span class="nx">svgRoot</span>
+            <span class="nv">application: </span><span class="nx">options</span><span class="p">.</span><span class="nx">application</span>
+            <span class="nv">height: </span><span class="nx">height</span>
+            <span class="nv">width: </span><span class="nx">width</span></pre></div></td></tr><tr id="section-18"><td class="docs"><div class="pilwrap"><a href="#section-18" class="pilcrow">&#182;</a></div><p>Once we have the presentation in place, we set the
+key of the SubSet data view to the id of the text content 
+annotation item. This causes the presentation to render the
+annotations.</p>
+</td><td class="code"><div class="highlight"><pre>          <span class="nx">textDataView</span><span class="p">.</span><span class="nx">setKey</span> <span class="nx">id</span>
+
+          <span class="nv">rendering._destroy = </span><span class="o">-&gt;</span>
+            <span class="nx">text</span><span class="p">.</span><span class="nx">_destroy</span><span class="p">()</span> <span class="k">if</span> <span class="nx">text</span><span class="p">.</span><span class="nx">_destroy</span><span class="o">?</span>
+            <span class="nx">textDataView</span><span class="p">.</span><span class="nx">_destroy</span><span class="p">()</span> <span class="k">if</span> <span class="nx">textDataView</span><span class="p">.</span><span class="nx">_destroy</span><span class="o">?</span>
+
+          <span class="nv">rendering.remove = </span><span class="o">-&gt;</span>
+            <span class="nx">$</span><span class="p">(</span><span class="nx">textContainer</span><span class="p">).</span><span class="nx">empty</span><span class="p">()</span>
+            <span class="nx">svgRoot</span><span class="p">.</span><span class="nx">remove</span> <span class="nx">textContainer</span>
+
+          <span class="nv">rendering.update = </span><span class="nf">(item) -&gt;</span>
+            <span class="nv">x = </span><span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">x</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">?</span> <span class="k">then</span> <span class="nx">item</span><span class="p">.</span><span class="nx">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="nv">y = </span><span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">y</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">?</span> <span class="k">then</span> <span class="nx">item</span><span class="p">.</span><span class="nx">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="nv">width = </span><span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">width</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">?</span> <span class="k">then</span> <span class="nx">item</span><span class="p">.</span><span class="nx">width</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="nx">options</span><span class="p">.</span><span class="nx">width</span> <span class="o">-</span> <span class="nx">x</span>
+            <span class="nv">height = </span><span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">height</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">?</span> <span class="k">then</span> <span class="nx">item</span><span class="p">.</span><span class="nx">height</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="nx">options</span><span class="p">.</span><span class="nx">height</span> <span class="o">-</span> <span class="nx">y</span>
+            <span class="nx">$</span><span class="p">(</span><span class="nx">textContainer</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&quot;x&quot;</span><span class="p">,</span> <span class="nx">x</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&quot;y&quot;</span><span class="p">,</span> <span class="nx">y</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&quot;width&quot;</span><span class="p">,</span> <span class="nx">width</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">,</span> <span class="nx">height</span><span class="p">)</span>
+
+          <span class="nx">rendering</span></pre></div></td></tr><tr id="section-19"><td class="docs"><div class="pilwrap"><a href="#section-19" class="pilcrow">&#182;</a></div><h2>Presentation.Canvas</h2>
+</td><td class="code"><div class="highlight"><pre></pre></div></td></tr><tr id="section-20"><td class="docs"><div class="pilwrap"><a href="#section-20" class="pilcrow">&#182;</a></div><p>This is the wrapper around a root Zone presentation that gets things
+started.</p>
+</td><td class="code"><div class="highlight"><pre>  <span class="nx">Presentation</span><span class="p">.</span><span class="nx">namespace</span> <span class="s">&quot;Canvas&quot;</span><span class="p">,</span> <span class="nf">(Canvas) -&gt;</span>
+    <span class="nv">Canvas.initInstance = </span><span class="nf">(args...) -&gt;</span>
+      <span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">Presentation</span><span class="p">.</span><span class="nx">initInstance</span> <span class="s">&quot;SGA.Reader.Presentation.Canvas&quot;</span><span class="p">,</span> <span class="nx">args</span><span class="p">...,</span> <span class="nf">(that, container) -&gt;</span></pre></div></td></tr><tr id="section-21"><td class="docs"><div class="pilwrap"><a href="#section-21" class="pilcrow">&#182;</a></div><p>We want to draw everything that annotates a Canvas
+this would be anything with a target = the canvas</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nv">options = </span><span class="nx">that</span><span class="p">.</span><span class="nx">options</span></pre></div></td></tr><tr id="section-22"><td class="docs"><div class="pilwrap"><a href="#section-22" class="pilcrow">&#182;</a></div><p>we need a nice way to get the span of text from the tei
+and then we apply any annotations that modify how we display
+the text before we create the svg elements - that way, we get
+things like line breaks</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nv">annoExpr = </span><span class="nx">that</span><span class="p">.</span><span class="nx">dataView</span><span class="p">.</span><span class="nx">prepare</span><span class="p">([</span><span class="s">&#39;!target&#39;</span><span class="p">])</span>
+
+        <span class="nv">pendingSVGfctns = </span><span class="p">[]</span>
+        <span class="nv">SVG = </span><span class="nf">(cb) -&gt;</span>
+          <span class="nx">pendingSVGfctns</span><span class="p">.</span><span class="nx">push</span> <span class="nx">cb</span>
+
+        <span class="nv">svgRootEl = </span><span class="nx">$</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">          &lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; version=&quot;1.1&quot;</span>
+<span class="s">               xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;</span>
+<span class="s">               width=&quot;0&quot; height=&quot;0&quot;</span>
+<span class="s">           &gt;</span>
+<span class="s">          &lt;/svg&gt;</span>
+<span class="s">        &quot;&quot;&quot;</span><span class="p">)</span>
+        <span class="nx">container</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">svgRootEl</span><span class="p">)</span>
+        <span class="nv">svgRoot = </span><span class="nx">$</span><span class="p">(</span><span class="nx">svgRootEl</span><span class="p">).</span><span class="nx">svg</span> 
+          <span class="nv">onLoad: </span><span class="nf">(svg) -&gt;</span>
+            <span class="nv">SVG = </span><span class="nf">(cb) -&gt;</span> <span class="nx">cb</span><span class="p">(</span><span class="nx">svg</span><span class="p">)</span>
+            <span class="nx">cb</span><span class="p">(</span><span class="nx">svg</span><span class="p">)</span> <span class="k">for</span> <span class="nx">cb</span> <span class="k">in</span> <span class="nx">pendingSVGfctns</span>
+            <span class="nv">pendingSVGfctns = </span><span class="kc">null</span>
+        <span class="nv">canvasWidth = </span><span class="kc">null</span>
+        <span class="nv">canvasHeight = </span><span class="kc">null</span>
+        <span class="nv">SVGHeight = </span><span class="kc">null</span>
+        <span class="nv">SVGWidth = </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">).</span><span class="nx">width</span><span class="p">()</span><span class="o">*</span><span class="mi">20</span><span class="o">/</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span></pre></div></td></tr><tr id="section-23"><td class="docs"><div class="pilwrap"><a href="#section-23" class="pilcrow">&#182;</a></div><p>MITHGrid makes available a global listener for browser window
+resizing so we don't have to guess how to do this for each
+application.</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onWindowResize</span><span class="p">.</span><span class="nx">addListener</span> <span class="o">-&gt;</span>
+          <span class="nv">SVGWidth = </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="nx">container</span><span class="p">).</span><span class="nx">width</span><span class="p">()</span> <span class="o">*</span> <span class="mi">20</span><span class="o">/</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+          <span class="k">if</span> <span class="nx">canvasWidth</span><span class="o">?</span> <span class="o">and</span> <span class="nx">canvasWidth</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="nx">that</span><span class="p">.</span><span class="nx">setScale</span> <span class="p">(</span><span class="nx">SVGWidth</span> <span class="o">/</span> <span class="nx">canvasWidth</span><span class="p">)</span>
+          
+
+        <span class="nx">that</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onScaleChange</span><span class="p">.</span><span class="nx">addListener</span> <span class="nf">(s) -&gt;</span>
+          <span class="k">if</span> <span class="nx">canvasWidth</span><span class="o">?</span> <span class="o">and</span> <span class="nx">canvasHeight</span><span class="o">?</span>
+            <span class="nv">SVGHeight = </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">canvasHeight</span> <span class="o">*</span> <span class="nx">s</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+            <span class="nx">SVG</span> <span class="nf">(svgRoot) -&gt;</span>
+              <span class="nx">svgRootEl</span><span class="p">.</span><span class="nx">attr</span>
+                <span class="nv">width: </span><span class="nx">canvasWidth</span>
+                <span class="nv">height: </span><span class="nx">canvasHeight</span>
+              <span class="nx">svgRoot</span><span class="p">.</span><span class="nx">configure</span>
+                <span class="nv">viewBox: </span><span class="s">&quot;0 0 </span><span class="si">#{</span><span class="nx">canvasWidth</span><span class="si">}</span><span class="s"> </span><span class="si">#{</span><span class="nx">canvasHeight</span><span class="si">}</span><span class="s">&quot;</span>
+
+              <span class="nx">svgRootEl</span><span class="p">.</span><span class="nx">css</span>
+                <span class="nv">width: </span><span class="nx">SVGWidth</span>
+                <span class="nv">height: </span><span class="nx">SVGHeight</span>
+                <span class="nv">border: </span><span class="s">&quot;0.5em solid </span><span class="err">#</span><span class="s">eeeeee&quot;</span>
+                <span class="s">&quot;border-radius&quot;</span><span class="o">:</span> <span class="s">&quot;5px&quot;</span>
+                <span class="s">&quot;background-color&quot;</span><span class="o">:</span> <span class="s">&quot;</span><span class="err">#</span><span class="s">ffffff&quot;</span></pre></div></td></tr><tr id="section-24"><td class="docs"><div class="pilwrap"><a href="#section-24" class="pilcrow">&#182;</a></div><p>the data view is managed outside the presentation</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nv">dataView = </span><span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">Data</span><span class="p">.</span><span class="nx">SubSet</span><span class="p">.</span><span class="nx">initInstance</span>
+          <span class="nv">dataStore: </span><span class="nx">options</span><span class="p">.</span><span class="nx">dataView</span>
+          <span class="nv">expressions: </span><span class="p">[</span> <span class="s">&#39;!target&#39;</span> <span class="p">]</span>
+          <span class="nv">key: </span><span class="kc">null</span>
+
+        <span class="nv">realCanvas = </span><span class="kc">null</span>
+
+        <span class="nx">that</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">onCanvasChange</span><span class="p">.</span><span class="nx">addListener</span> <span class="nf">(canvas) -&gt;</span>
+          <span class="nx">dataView</span><span class="p">.</span><span class="nx">setKey</span><span class="p">(</span><span class="nx">canvas</span><span class="p">)</span>
+          <span class="nv">item = </span><span class="nx">dataView</span><span class="p">.</span><span class="nx">getItem</span> <span class="nx">canvas</span></pre></div></td></tr><tr id="section-25"><td class="docs"><div class="pilwrap"><a href="#section-25" class="pilcrow">&#182;</a></div><p>now make SVG canvas the size of the canvas (for now)
+eventually, we'll constrain the size but maintain the
+aspect ratio</p>
+</td><td class="code"><div class="highlight"><pre>          <span class="nv">canvasWidth = </span><span class="nx">item</span><span class="p">.</span><span class="nx">width</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">||</span> <span class="mi">1</span>
+          <span class="nv">canvasHeight = </span><span class="nx">item</span><span class="p">.</span><span class="nx">height</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">||</span> <span class="mi">1</span>
+          <span class="nx">that</span><span class="p">.</span><span class="nx">setScale</span> <span class="p">(</span><span class="nx">SVGWidth</span> <span class="o">/</span> <span class="nx">canvasWidth</span><span class="p">)</span>
+          <span class="k">if</span> <span class="nx">realCanvas</span><span class="o">?</span>
+            <span class="nx">realCanvas</span><span class="p">.</span><span class="nx">hide</span><span class="p">()</span> <span class="k">if</span> <span class="nx">realCanvas</span><span class="p">.</span><span class="nx">hide</span><span class="o">?</span>
+            <span class="nx">realCanvas</span><span class="p">.</span><span class="nx">_destroy</span><span class="p">()</span> <span class="k">if</span> <span class="nx">realCanvas</span><span class="p">.</span><span class="nx">_destroy</span><span class="o">?</span>
+          <span class="nx">SVG</span> <span class="nf">(svgRoot) -&gt;</span>
+            <span class="nx">svgRoot</span><span class="p">.</span><span class="nx">clear</span><span class="p">()</span>
+            <span class="nv">realCanvas = </span><span class="nx">SGA</span><span class="p">.</span><span class="nx">Reader</span><span class="p">.</span><span class="nx">Presentation</span><span class="p">.</span><span class="nx">Zone</span><span class="p">.</span><span class="nx">initInstance</span> <span class="nx">svgRoot</span><span class="p">.</span><span class="nx">root</span><span class="p">(),</span>
+              <span class="nv">types: </span><span class="nx">options</span><span class="p">.</span><span class="nx">types</span>
+              <span class="nv">dataView: </span><span class="nx">dataView</span>
+              <span class="nv">application: </span><span class="nx">options</span><span class="p">.</span><span class="nx">application</span>
+              <span class="nv">height: </span><span class="nx">canvasHeight</span>
+              <span class="nv">width: </span><span class="nx">canvasWidth</span>
+              <span class="nv">svgRoot: </span><span class="nx">svgRoot</span>
+
+</pre></div></td></tr></tbody></table><div id="generated">generated Mon Jan 07 2013 15:18:18 GMT-0500 (EST)  </div><div id="projectname"><a href="../index.html">SGA Shared Canvas Viewer</a></div></div>

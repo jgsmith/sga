@@ -1,0 +1,196 @@
+---
+layout: docco
+title: sga/code/shared-canvas/src/data.coffee.html
+---
+<div id="container"><div id="background"></div><div id="jump_to">Jump To &hellip;<div id="jump_wrapper"><div id="jump_page"><a href="../index.html" class="source"><span class="file_name">README</span></a><a href="../src/application.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">application.coffee</span></a><a href="../src/component.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">component.coffee</span></a><a href="../src/controller.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">controller.coffee</span></a><a href="../src/core.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">core.coffee</span></a><a href="../src/data.coffee.html" class="source selected"><span class="base_path">src / </span><span class="file_name">data.coffee</span></a><a href="../src/intro.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">intro.coffee</span></a><a href="../src/outro.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">outro.coffee</span></a><a href="../src/presentation.coffee.html" class="source "><span class="base_path">src / </span><span class="file_name">presentation.coffee</span></a></div></div></div><table cellpadding="0" cellspacing="0"><thead><tr><th class="docs"><h1>data.coffee</h1><div class="filepath">src/</div></th><th class="code"></th></tr></thead><tbody><tr id="section-1"><td class="docs"><div class="pilwrap"><a href="#section-1" class="pilcrow">&#182;</a></div><h1>Data Managment</h1>
+</td><td class="code"><div class="highlight"><pre><span class="nx">SGAReader</span><span class="p">.</span><span class="nx">namespace</span> <span class="s">&quot;Data&quot;</span><span class="p">,</span> <span class="nf">(Data) -&gt;</span></pre></div></td></tr><tr id="section-2"><td class="docs"><div class="pilwrap"><a href="#section-2" class="pilcrow">&#182;</a></div><h2>Data.StyleStore</h2>
+</td><td class="code"><div class="highlight"><pre>  <span class="nx">Data</span><span class="p">.</span><span class="nx">namespace</span> <span class="s">&quot;StyleStore&quot;</span><span class="p">,</span> <span class="nf">(StyleStore) -&gt;</span>
+    <span class="nv">StyleStore.initInstance = </span><span class="nf">(args...) -&gt;</span>
+      <span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">initInstance</span> <span class="nx">args</span><span class="p">...,</span> <span class="nf">(that) -&gt;</span>
+        <span class="nv">options = </span><span class="nx">that</span><span class="p">.</span><span class="nx">options</span>
+
+        <span class="nv">docs = </span><span class="p">{</span> <span class="p">}</span>
+        <span class="nv">regex = </span><span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="s">&quot;(?:\\.(\\S+)\\s*\\{\\s*([^}]*)\\s*\\})&quot;</span><span class="p">,</span> <span class="s">&quot;mg&quot;</span><span class="p">)</span></pre></div></td></tr><tr id="section-3"><td class="docs"><div class="pilwrap"><a href="#section-3" class="pilcrow">&#182;</a></div><p>Associates the CSS content with the given id.</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nv">that.addStyles = </span><span class="nf">(id, css) -&gt;</span>
+          <span class="k">return</span> <span class="k">if</span> <span class="nx">docs</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span><span class="o">?</span>
+          <span class="nx">docs</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="p">}</span>
+          <span class="nv">results = </span><span class="nx">regex</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="nx">css</span><span class="p">)</span>
+          <span class="k">while</span> <span class="nx">results</span><span class="o">?</span><span class="p">.</span><span class="nx">index</span><span class="o">?</span>
+            <span class="nx">docs</span><span class="p">[</span><span class="nx">id</span><span class="p">][</span><span class="nx">results</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="nx">results</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="nv">results = </span><span class="nx">regex</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="nx">css</span><span class="p">)</span></pre></div></td></tr><tr id="section-4"><td class="docs"><div class="pilwrap"><a href="#section-4" class="pilcrow">&#182;</a></div><p>Returns the CSS style rules for a given class as defined by the
+CSS content associated with the given id.</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nv">that.getStylesForClass = </span><span class="nf">(id, klass) -&gt;</span>
+          <span class="k">if</span> <span class="nx">docs</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span><span class="o">?</span><span class="p">[</span><span class="nx">klass</span><span class="p">]</span><span class="o">?</span>
+            <span class="nx">docs</span><span class="p">[</span><span class="nx">id</span><span class="p">][</span><span class="nx">klass</span><span class="p">]</span>
+          <span class="k">else</span>
+            <span class="s">&quot;&quot;</span></pre></div></td></tr><tr id="section-5"><td class="docs"><div class="pilwrap"><a href="#section-5" class="pilcrow">&#182;</a></div><h2>Data.TextStore</h2>
+</td><td class="code"><div class="highlight"><pre>  <span class="nx">Data</span><span class="p">.</span><span class="nx">namespace</span> <span class="s">&quot;TextStore&quot;</span><span class="p">,</span> <span class="nf">(TextStore) -&gt;</span>
+    <span class="nv">TextStore.initInstance = </span><span class="nf">(args...) -&gt;</span>
+      <span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">initInstance</span> <span class="nx">args</span><span class="p">...,</span> <span class="nf">(that) -&gt;</span>
+        <span class="nv">options = </span><span class="nx">that</span><span class="p">.</span><span class="nx">options</span>
+
+        <span class="nv">fileContents = </span><span class="p">{</span> <span class="p">}</span>
+        <span class="nv">loadingFiles = </span><span class="p">{</span> <span class="p">}</span>
+        <span class="nv">pendingFiles = </span><span class="p">{</span> <span class="p">}</span>
+
+        <span class="nv">that.addFile = </span><span class="nf">(files) -&gt;</span>
+          <span class="nv">files = </span><span class="p">[</span> <span class="nx">files</span> <span class="p">]</span> <span class="nx">unless</span> <span class="nx">$</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">files</span><span class="p">)</span>
+          <span class="k">for</span> <span class="nx">file</span> <span class="k">in</span> <span class="nx">files</span> 
+            <span class="nx">do</span> <span class="nf">(file) -&gt;</span>
+              <span class="k">if</span> <span class="nx">file</span><span class="o">?</span> <span class="o">and</span> <span class="o">!</span><span class="nx">fileContents</span><span class="p">[</span><span class="nx">file</span><span class="p">]</span><span class="o">?</span> <span class="o">and</span> <span class="o">!</span><span class="nx">loadingFiles</span><span class="p">[</span><span class="nx">file</span><span class="p">]</span><span class="o">?</span>
+                <span class="nx">loadingFiles</span><span class="p">[</span><span class="nx">file</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span> <span class="p">]</span>
+                <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span>
+                  <span class="nv">url: </span><span class="nx">file</span>
+                  <span class="nv">type: </span><span class="s">&#39;GET&#39;</span>
+                  <span class="nv">processData: </span><span class="kc">false</span>
+                  <span class="nv">success: </span><span class="nf">(data) -&gt;</span>
+                    <span class="nv">c = </span><span class="nx">data</span><span class="p">.</span><span class="nx">documentElement</span><span class="p">.</span><span class="nx">textContent</span>
+                    <span class="nx">fileContents</span><span class="p">[</span><span class="nx">file</span><span class="p">]</span> <span class="o">=</span> <span class="nx">c</span>
+                    <span class="nx">f</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span> <span class="k">for</span> <span class="nx">f</span> <span class="k">in</span> <span class="nx">loadingFiles</span><span class="p">[</span><span class="nx">file</span><span class="p">]</span>
+                    <span class="k">delete</span> <span class="nx">loadingFiles</span><span class="p">[</span><span class="nx">file</span><span class="p">]</span>
+
+        <span class="nv">that.withFile = </span><span class="nf">(file, cb) -&gt;</span>
+          <span class="k">if</span> <span class="nx">fileContents</span><span class="p">[</span><span class="nx">file</span><span class="p">]</span><span class="o">?</span>
+            <span class="nx">cb</span><span class="p">(</span><span class="nx">fileContents</span><span class="p">[</span><span class="nx">file</span><span class="p">])</span>
+          <span class="k">else</span> <span class="k">if</span> <span class="nx">loadingFiles</span><span class="p">[</span><span class="nx">file</span><span class="p">]</span><span class="o">?</span>
+            <span class="nx">loadingFiles</span><span class="p">[</span><span class="nx">file</span><span class="p">].</span><span class="nx">push</span> <span class="nx">cb</span>
+          <span class="k">else</span>
+            <span class="nx">that</span><span class="p">.</span><span class="nx">addFile</span> <span class="nx">file</span>
+            <span class="nx">loadingFiles</span><span class="p">[</span><span class="nx">file</span><span class="p">].</span><span class="nx">push</span> <span class="nx">cb</span></pre></div></td></tr><tr id="section-6"><td class="docs"><div class="pilwrap"><a href="#section-6" class="pilcrow">&#182;</a></div><h2>Data.Manifest</h2>
+</td><td class="code"><div class="highlight"><pre>  <span class="nx">Data</span><span class="p">.</span><span class="nx">namespace</span> <span class="s">&quot;Manifest&quot;</span><span class="p">,</span> <span class="nf">(Manifest) -&gt;</span></pre></div></td></tr><tr id="section-7"><td class="docs"><div class="pilwrap"><a href="#section-7" class="pilcrow">&#182;</a></div><p>We list all of the namespaces that we care about and the prefix
+we map them to. Some of the namespaces are easy "misspellings"
+that let us support older namespaces.</p>
+</td><td class="code"><div class="highlight"><pre>    <span class="nv">NS =</span>
+      <span class="s">&quot;http://dms.stanford.edu/ns/&quot;</span><span class="o">:</span> <span class="s">&quot;sc&quot;</span>
+      <span class="s">&quot;http://www.shared-canvas.org/ns/&quot;</span><span class="o">:</span> <span class="s">&quot;sc&quot;</span>
+      <span class="s">&quot;http://www.w3.org/2000/01/rdf-schema</span><span class="err">#</span><span class="s">&quot;</span><span class="o">:</span> <span class="s">&quot;rdfs&quot;</span>
+      <span class="s">&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns</span><span class="err">#</span><span class="s">&quot;</span><span class="o">:</span> <span class="s">&quot;rdf&quot;</span>
+      <span class="s">&quot;http://www.w3.org/2003/12/exif/ns</span><span class="err">#</span><span class="s">&quot;</span><span class="o">:</span> <span class="s">&quot;exif&quot;</span>
+      <span class="s">&quot;http://purl.org/dc/elements/1.1/&quot;</span><span class="o">:</span> <span class="s">&quot;dc&quot;</span>
+      <span class="s">&quot;http://www.w3.org/ns/openannotation/core/&quot;</span><span class="o">:</span> <span class="s">&quot;oa&quot;</span>
+      <span class="s">&quot;http://www.openannotation.org/ns/&quot;</span><span class="o">:</span> <span class="s">&quot;oa&quot;</span>
+      <span class="s">&quot;http://www.w3.org/ns/openannotation/extension/&quot;</span><span class="o">:</span> <span class="s">&quot;oax&quot;</span>
+      <span class="s">&quot;http://www.openarchives.org/ore/terms/&quot;</span><span class="o">:</span> <span class="s">&quot;ore&quot;</span>
+      <span class="s">&quot;http://www.shelleygodwinarchive.org/ns/1</span><span class="err">#</span><span class="s">&quot;</span><span class="o">:</span> <span class="s">&quot;sga&quot;</span>
+      <span class="s">&quot;http://www.shelleygodwinarchive.org/ns1</span><span class="err">#</span><span class="s">&quot;</span><span class="o">:</span> <span class="s">&quot;sga&quot;</span>
+      <span class="s">&quot;http://www.w3.org/2011/content</span><span class="err">#</span><span class="s">&quot;</span><span class="o">:</span> <span class="s">&quot;cnt&quot;</span>
+
+    <span class="nv">types =</span>
+      <span class="s">&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns</span><span class="err">#</span><span class="s">type&quot;</span><span class="o">:</span> <span class="s">&quot;item&quot;</span>
+      <span class="s">&quot;http://www.w3.org/ns/openannotation/core/hasMotivation&quot;</span><span class="o">:</span> <span class="s">&quot;item&quot;</span>
+
+    <span class="nv">Manifest.initInstance = </span><span class="nf">(args...) -&gt;</span>
+      <span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">initInstance</span> <span class="s">&quot;SGA.Reader.Data.Manifest&quot;</span><span class="p">,</span> <span class="nx">args</span><span class="p">...,</span> <span class="nf">(that) -&gt;</span>
+        <span class="nv">options = </span><span class="nx">that</span><span class="p">.</span><span class="nx">options</span>
+
+        <span class="nv">data = </span><span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">Data</span><span class="p">.</span><span class="nx">Store</span><span class="p">.</span><span class="nx">initInstance</span><span class="p">()</span>
+
+        <span class="nv">that.size = </span><span class="o">-&gt;</span> <span class="nx">data</span><span class="p">.</span><span class="nx">size</span><span class="p">()</span>
+
+        <span class="nv">loadedUrls = </span><span class="p">[]</span>
+
+        <span class="nv">importFromURL = </span><span class="nf">(url, cb) -&gt;</span>
+          <span class="k">if</span> <span class="nx">url</span> <span class="k">in</span> <span class="nx">loadedUrls</span>
+            <span class="nx">cb</span><span class="p">()</span>
+            <span class="k">return</span>
+          <span class="nx">loadedUrls</span><span class="p">.</span><span class="nx">push</span> <span class="nx">url</span>
+          <span class="nx">that</span><span class="p">.</span><span class="nx">addItemsToProcess</span> <span class="mi">1</span>
+          
+          <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span>
+            <span class="nv">url: </span><span class="nx">url</span>
+            <span class="nv">type: </span><span class="s">&#39;GET&#39;</span>
+            <span class="nv">contentType: </span><span class="s">&#39;application/rdf+json&#39;</span>
+            <span class="nv">processData: </span><span class="kc">false</span>
+            <span class="nv">dataType: </span><span class="s">&#39;json&#39;</span>
+            <span class="nv">success: </span><span class="nf">(data) -&gt;</span> <span class="nx">that</span><span class="p">.</span><span class="nx">importJSON</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">cb</span>
+            <span class="nv">error: </span><span class="nx">cb</span></pre></div></td></tr><tr id="section-8"><td class="docs"><div class="pilwrap"><a href="#section-8" class="pilcrow">&#182;</a></div><p>we want to get the rdf/JSON version of things if we can</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nv">that.importJSON = </span><span class="nf">(json, cb) -&gt;</span></pre></div></td></tr><tr id="section-9"><td class="docs"><div class="pilwrap"><a href="#section-9" class="pilcrow">&#182;</a></div><p>we care about certain namespaces - others we ignore
+those we care about, we translate for datastore
+{nsPrefix}{localName}</p>
+</td><td class="code"><div class="highlight"><pre>          <span class="nv">items = </span><span class="p">[]</span>
+          <span class="nv">syncer = </span><span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">initSynchronizer</span><span class="p">()</span>
+          <span class="nv">subjects = </span><span class="p">(</span><span class="nx">s</span> <span class="k">for</span> <span class="nx">s</span> <span class="k">of</span> <span class="nx">json</span><span class="p">)</span> <span class="c1"># when json.hasOwnProperty(s))</span>
+          <span class="nx">that</span><span class="p">.</span><span class="nx">addItemsToProcess</span> <span class="nx">subjects</span><span class="p">.</span><span class="nx">length</span>
+          <span class="nx">syncer</span><span class="p">.</span><span class="nx">process</span> <span class="nx">subjects</span><span class="p">,</span> <span class="nf">(s) -&gt;</span>
+            <span class="nv">predicates = </span><span class="nx">json</span><span class="p">[</span><span class="nx">s</span><span class="p">]</span>
+            <span class="nv">item =</span>
+              <span class="nv">id: </span><span class="nx">s</span>
+            <span class="k">for</span> <span class="nx">p</span><span class="p">,</span> <span class="nx">os</span> <span class="k">of</span> <span class="nx">predicates</span>
+               <span class="nv">values = </span><span class="p">[]</span>
+               <span class="k">if</span> <span class="nx">types</span><span class="p">[</span><span class="nx">p</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;item&quot;</span>
+                 <span class="k">for</span> <span class="nx">o</span> <span class="k">in</span> <span class="nx">os</span>
+                   <span class="k">if</span> <span class="nx">o</span><span class="p">.</span><span class="nx">type</span> <span class="o">==</span> <span class="s">&quot;uri&quot;</span>
+                     <span class="k">for</span> <span class="nx">ns</span><span class="p">,</span> <span class="nx">prefix</span> <span class="k">of</span> <span class="nx">NS</span>
+                       <span class="k">if</span> <span class="nx">o</span><span class="p">.</span><span class="nx">value</span><span class="p">[</span><span class="mi">0</span><span class="p">...</span><span class="nx">ns</span><span class="p">.</span><span class="nx">length</span><span class="p">]</span> <span class="o">==</span> <span class="nx">ns</span>
+                         <span class="nx">values</span><span class="p">.</span><span class="nx">push</span> <span class="nx">prefix</span> <span class="o">+</span> <span class="nx">o</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="nx">ns</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span>
+                 <span class="nv">item.type = </span><span class="nx">values</span>
+               <span class="k">else</span>
+                 <span class="k">for</span> <span class="nx">o</span> <span class="k">in</span> <span class="nx">os</span>
+                   <span class="k">if</span> <span class="nx">o</span><span class="p">.</span><span class="nx">type</span> <span class="o">==</span> <span class="s">&quot;literal&quot;</span>
+                     <span class="nx">values</span><span class="p">.</span><span class="nx">push</span> <span class="nx">o</span><span class="p">.</span><span class="nx">value</span></pre></div></td></tr><tr id="section-10"><td class="docs"><div class="pilwrap"><a href="#section-10" class="pilcrow">&#182;</a></div><p>Sometimes, references to blank nodes are wrapped in
+parenthesis, but the subject IDs will be with a leading
+<em>:. For example, an object uri/bnode in the form
+"(123abc)" refers to a resource with the URI
+"</em>:123abc".</p>
+</td><td class="code"><div class="highlight"><pre>                   <span class="k">else</span> <span class="k">if</span> <span class="nx">o</span><span class="p">.</span><span class="nx">type</span> <span class="o">==</span> <span class="s">&quot;uri&quot;</span>
+                     <span class="k">if</span> <span class="nx">o</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;(&quot;</span> <span class="o">and</span> <span class="nx">o</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;)&quot;</span>
+                       <span class="nx">values</span><span class="p">.</span><span class="nx">push</span> <span class="s">&quot;_:&quot;</span> <span class="o">+</span> <span class="nx">o</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nx">o</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">length</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+                     <span class="k">else</span>
+                       <span class="nx">values</span><span class="p">.</span><span class="nx">push</span> <span class="nx">o</span><span class="p">.</span><span class="nx">value</span>
+                   <span class="k">else</span> <span class="k">if</span> <span class="nx">o</span><span class="p">.</span><span class="nx">type</span> <span class="o">==</span> <span class="s">&quot;bnode&quot;</span>
+                     <span class="k">if</span> <span class="nx">o</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;(&quot;</span> <span class="o">and</span> <span class="nx">o</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;)&quot;</span>
+                       <span class="nx">values</span><span class="p">.</span><span class="nx">push</span> <span class="s">&quot;_:&quot;</span> <span class="o">+</span> <span class="nx">o</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nx">o</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">length</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+                     <span class="k">else</span>
+                       <span class="nx">values</span><span class="p">.</span><span class="nx">push</span> <span class="nx">o</span><span class="p">.</span><span class="nx">value</span>
+                     
+                 <span class="k">if</span> <span class="nx">values</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span>
+                   <span class="k">for</span> <span class="nx">ns</span><span class="p">,</span> <span class="nx">prefix</span> <span class="k">of</span> <span class="nx">NS</span>
+                     <span class="k">if</span> <span class="nx">p</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">ns</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="o">==</span> <span class="nx">ns</span>
+                       <span class="nv">pname = </span><span class="nx">prefix</span> <span class="o">+</span> <span class="nx">p</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="nx">ns</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span>
+                       <span class="nx">item</span><span class="p">[</span><span class="nx">pname</span><span class="p">]</span> <span class="o">=</span> <span class="nx">values</span>
+            <span class="k">if</span> <span class="o">!</span><span class="nx">item</span><span class="p">.</span><span class="nx">type</span><span class="o">?</span> <span class="o">or</span> <span class="nx">item</span><span class="p">.</span><span class="nx">type</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">0</span>
+              <span class="nv">item.type = </span><span class="s">&#39;Blank&#39;</span>
+ </pre></div></td></tr><tr id="section-11"><td class="docs"><div class="pilwrap"><a href="#section-11" class="pilcrow">&#182;</a></div><p>If the manifest indicates that another document describes
+this resource, then we throw away the current item we've built
+and load the data before continuing processing for this
+resource.</p>
+
+<p>We are not using this in the current SGA manifest, so this
+might be broken - but this is where support would be hooked in.</p>
+</td><td class="code"><div class="highlight"><pre>            <span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">oreisDescribedBy</span><span class="o">?</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span>
+              <span class="k">for</span> <span class="nx">url</span> <span class="k">in</span> <span class="nx">item</span><span class="p">.</span><span class="nx">oreisDescribedBy</span>
+                <span class="nx">syncer</span><span class="p">.</span><span class="nx">increment</span><span class="p">()</span>
+                <span class="nx">importFromURL</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">syncer</span><span class="p">.</span><span class="nx">decrement</span>
+            <span class="k">else</span>
+              <span class="nx">items</span><span class="p">.</span><span class="nx">push</span> <span class="nx">item</span> 
+            <span class="nx">that</span><span class="p">.</span><span class="nx">addItemsProcessed</span> <span class="mi">1</span>
+
+          <span class="nx">syncer</span><span class="p">.</span><span class="nx">done</span> <span class="o">-&gt;</span>
+            <span class="nx">that</span><span class="p">.</span><span class="nx">addItemsProcessed</span> <span class="mi">1</span>
+            <span class="nx">setTimeout</span> <span class="o">-&gt;</span>
+              <span class="k">for</span> <span class="nx">item</span> <span class="k">in</span> <span class="nx">items</span>
+                <span class="k">if</span> <span class="nx">data</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span>
+                  <span class="nx">data</span><span class="p">.</span><span class="nx">updateItems</span> <span class="p">[</span> <span class="nx">item</span> <span class="p">]</span>
+                <span class="k">else</span>
+                  <span class="nx">data</span><span class="p">.</span><span class="nx">loadItems</span> <span class="p">[</span> <span class="nx">item</span> <span class="p">]</span>
+              <span class="nx">cb</span><span class="p">()</span> <span class="k">if</span> <span class="nx">cb</span><span class="o">?</span>
+            <span class="p">,</span> <span class="mi">0</span>
+
+        <span class="nv">itemsWithType = </span><span class="nf">(type) -&gt;</span>
+          <span class="nv">type = </span><span class="p">[</span> <span class="nx">type</span> <span class="p">]</span> <span class="k">if</span> <span class="o">!</span><span class="nx">$</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">type</span><span class="p">)</span>
+          <span class="nv">types = </span><span class="nx">MITHGrid</span><span class="p">.</span><span class="nx">Data</span><span class="p">.</span><span class="nx">Set</span><span class="p">.</span><span class="nx">initInstance</span> <span class="nx">type</span>
+          <span class="nx">data</span><span class="p">.</span><span class="nx">getSubjectsUnion</span><span class="p">(</span><span class="nx">types</span><span class="p">,</span> <span class="s">&quot;type&quot;</span><span class="p">).</span><span class="nx">items</span><span class="p">()</span></pre></div></td></tr><tr id="section-12"><td class="docs"><div class="pilwrap"><a href="#section-12" class="pilcrow">&#182;</a></div><p>Get things of different types. For example, "scCanvas" gets
+all of the canvas items.</p>
+</td><td class="code"><div class="highlight"><pre>        <span class="nv">that.getCanvases    = </span><span class="o">-&gt;</span> <span class="nx">itemsWithType</span> <span class="s">&#39;scCanvas&#39;</span>
+        <span class="nv">that.getZones       = </span><span class="o">-&gt;</span> <span class="nx">itemsWithType</span> <span class="s">&#39;scZone&#39;</span>
+        <span class="nv">that.getSequences   = </span><span class="o">-&gt;</span> <span class="nx">itemsWithType</span> <span class="s">&#39;scSequence&#39;</span>
+        <span class="nv">that.getAnnotations = </span><span class="o">-&gt;</span> <span class="nx">itemsWithType</span> <span class="s">&#39;oaAnnotation&#39;</span>
+
+        <span class="nv">that.getItem = </span><span class="nx">data</span><span class="p">.</span><span class="nx">getItem</span>
+        <span class="nv">that.contains = </span><span class="nx">data</span><span class="p">.</span><span class="nx">contains</span>
+
+        <span class="nv">that.importFromURL = </span><span class="nf">(url, cb) -&gt;</span>
+          <span class="nx">importFromURL</span> <span class="nx">url</span><span class="p">,</span> <span class="o">-&gt;</span>
+            <span class="nx">cb</span><span class="p">()</span> <span class="k">if</span> <span class="nx">cb</span><span class="o">?</span>
+
+</pre></div></td></tr></tbody></table><div id="generated">generated Mon Jan 07 2013 15:18:17 GMT-0500 (EST)  </div><div id="projectname"><a href="../index.html">SGA Shared Canvas Viewer</a></div></div>
