@@ -1,5 +1,5 @@
 ---
-layout: docco
+layout: default
 title: Code Documentation
 ---
 
